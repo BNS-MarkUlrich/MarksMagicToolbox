@@ -9,18 +9,18 @@ public class TagManager : MonoBehaviour
 
     public void AddNameTag(string tag)
     {
-        if (tags.Contains(" [" + tag + "] ")) return;
-        tags.Add(" [" + tag + "] ");
+        if (tags.Contains(tag)) return;
+        tags.Add(tag);
     }
 
     public void RemoveNameTag(string tag)
     {
-        if (!tags.Contains(" [" + tag + "] ")) return;
-        tags.Remove(" [" + tag + "] ");
+        if (!tags.Contains(tag)) return;
+        tags.Remove(tag);
     }
 
     public bool HasNameTag(string tag)
     {
-        return tags.Contains(" [" + tag + "] ");
+        return tags.Contains(tag);
     }
 }
