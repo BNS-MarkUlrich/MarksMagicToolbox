@@ -10,7 +10,7 @@ Softlinks:
 
 <details>
   <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152218-77b70e0f-b2a2-4f8e-bbc6-0e391754abf5.png" alt="image" width="200"/>
+  <img src="https://user-images.githubusercontent.com/71002222/166152218-77b70e0f-b2a2-4f8e-bbc6-0e391754abf5.png" alt="image" width="400"/>
 </details>
 
 <br>
@@ -20,7 +20,7 @@ Efficient Health System that does and has everything you'd expect from a health 
 
 <details>
   <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152539-1a5a9653-cac3-436d-b055-447831c872c2.png" alt="image" width="200"/>
+  <img src="https://user-images.githubusercontent.com/71002222/166152539-1a5a9653-cac3-436d-b055-447831c872c2.png" alt="image" width="400"/>
 </details>
 
 <br>
@@ -30,7 +30,7 @@ An "expansion" on the already existing Tag system from Unity. Currently you can 
 
 <details>
   <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152754-28f8de43-cf95-4ee9-8a40-8103e2a965d9.png" alt="image" width="200"/>
+  <img src="https://user-images.githubusercontent.com/71002222/166152754-28f8de43-cf95-4ee9-8a40-8103e2a965d9.png" alt="image" width="400"/>
 </details>
 
 #### TagManager Utilities
