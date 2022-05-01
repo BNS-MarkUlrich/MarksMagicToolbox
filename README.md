@@ -46,11 +46,11 @@ Other possibilities:
 
 ### Transform Utilities
 Transform Utilities are method extensions for the transform component native to Unity's Monobehaviour. Some of the possibilities this offers:
-* ```gameObject.LookAt(direction)```
-* ```gameObject.Hide()```
-* ```gameObject.SetPositionX(xPosition)```
-* ```gameObject.SetPositionY(yPosition)```
-* ```gameObject.SetPositionZ(zPosition)```
+* ```gameObject.LookAt(direction);```
+* ```gameObject.Hide();```
+* ```gameObject.SetPositionX(xPosition);```
+* ```gameObject.SetPositionY(yPosition);```
+* ```gameObject.SetPositionZ(zPosition);```
 
 <br>
 
