@@ -45,9 +45,21 @@ Other possibilities:
 <br>
 
 ### Transform Utilities
-
+Transform Utilities are method extensions for the transform component native to Unity's Monobehaviour. Some of the possibilities this offers:
+* ```gameObject.LookAt(direction)```
+* ```gameObject.Hide()```
+* ```gameObject.SetPositionX(xPosition)```
+* ```gameObject.SetPositionY(yPosition)```
+* ```gameObject.SetPositionZ(zPosition)```
 
 <br>
 
 ### SceneBodyCleaner
+System that clears "dead bodies" from the scene once the amount of dead bodies exceeds the configurable amount.
 
+<details>
+  <summary>Inspector Image</summary>
+  <img src="https://user-images.githubusercontent.com/71002222/166153755-12a0f1be-12c4-4678-bc7d-96dba17dcf55.png" alt="image" width="400"/>
+</details>
+
+###### *This is all to be expanded on later
