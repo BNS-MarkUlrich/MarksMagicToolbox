@@ -17,7 +17,7 @@ public class Health : MonoBehaviour
     public float GetHealth => health;
     public float GetMaxHealth => maxHealth;
 
-    public bool isDead;
+    [HideInInspector] public bool isDead;
 
     private void Start()
     {
@@ -57,28 +57,4 @@ public class Health : MonoBehaviour
         isDead = true;
         onDie?.Invoke();
     }
-    
-    // Mark Health Debugging Begin
-    /*private void Update()
-    {
-        DoDamage();
-        DoHeal();
-    }
-    
-    private void DoDamage()
-    {
-        var spaceKey = Input.GetKeyDown(KeyCode.Space);
-        if (!spaceKey) return;
-        
-        TakeDamage(10f);
-    }
-    
-    private void DoHeal()
-    {
-        var backSpace = Input.GetKeyDown(KeyCode.Backspace);
-        if (!backSpace) return;
-
-        Heal(10f);
-    }*/
-    // Mark Health Debugging End
 }
