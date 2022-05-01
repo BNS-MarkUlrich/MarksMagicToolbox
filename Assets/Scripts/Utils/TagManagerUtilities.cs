@@ -8,7 +8,6 @@ public static class TagManagerUtilities
     private static bool HasTagManager(this GameObject gameObject)
     {
         var hasTagManager = gameObject.GetComponent<TagManager>() != null;
-        if (!hasTagManager) Debug.LogError(gameObject.name + " has no TagManager!");
         return hasTagManager;
     }
 
