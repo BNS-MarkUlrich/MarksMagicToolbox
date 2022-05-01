@@ -17,7 +17,7 @@ public class WaveSystem : MonoBehaviour
     private bool canCheckCreatures;
 
     private int totalCreatureAmount;
-    private List<Health> deadCreatures = new List<Health>();
+    private List<GameObject> deadCreatures = new List<GameObject>();
     
     public int GetWave => wave;
 
@@ -110,7 +110,7 @@ public class WaveSystem : MonoBehaviour
 
     private void CheckCreatures()
     {
-        var allObjects = FindObjectsOfType<Health>();
+        var allObjects = FindObjectsOfType<GameObject>();
         
         var perishedCreatures = allObjects.Where(creature => creature.gameObject.HasTag("Enemy") && creature.gameObject.HasTag("Dead")).ToList();
         
