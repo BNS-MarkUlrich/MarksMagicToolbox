@@ -60,13 +60,22 @@ public class WaveSystem : MonoBehaviour
                 AddDefaultSpawn(creature);
             }
 
-            for (var i = 0; i < creatureAmount; i++)
-            {
-                var randomSpawnIndex = Random.Range(0, spawnLocationCount);
-                Instantiate(currentCreature, spawnLocations[randomSpawnIndex].position, Quaternion.identity);
-            }
+            StartCoroutine(SpawnInterval(creature, currentCreature, spawnLocations, spawnLocationCount));
         }
         canCheckCreatures = true;
+    }
+
+    private IEnumerator SpawnInterval(WaveCreatures creature, GameObject currentCreature, List<Transform> spawnLocations, int spawnLocationCount)
+    {
+        var creatureAmount = creature.creatureAmount;
+        var spawnInterval = creature.spawnInterval;
+        for (var i = 0; i < creatureAmount;)
+        {
+            var randomSpawnIndex = Random.Range(0, spawnLocationCount);
+            Instantiate(currentCreature, spawnLocations[randomSpawnIndex].position, Quaternion.identity);
+            yield return new WaitForSeconds(spawnInterval);
+            i++;
+        }
     }
 
     private void AddDefaultSpawn(WaveCreatures creature)
@@ -154,4 +163,5 @@ public struct WaveCreatures
     public GameObject creature;
     public int creatureAmount;
     public List<Transform> spawnLocations;
+    public float spawnInterval;
 }
