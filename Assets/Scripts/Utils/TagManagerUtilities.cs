@@ -40,4 +40,17 @@ public static class TagManagerUtilities
         var hasNameTag = gameObject.GetComponent<TagManager>().HasNameTag(tag);
         return hasNameTag;
     }
+
+    public static void FindObjectsWithTag(this List<GameObject> gameObjects, string tag)
+    {
+        foreach (var gameObject in gameObjects)
+        {
+            if (!HasTagManager(gameObject)) gameObjects.Remove(gameObject);
+
+            var tagManager = gameObject.GetComponent<TagManager>();
+            var hasTag = tagManager.HasNameTag(tag);
+            
+            if (!hasTag) gameObjects.Remove(gameObject);
+        }
+    }
 }
