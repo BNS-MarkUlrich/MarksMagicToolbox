@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class TagManagerUtilities
@@ -41,16 +42,35 @@ public static class TagManagerUtilities
         return hasNameTag;
     }
 
-    public static void FindObjectsWithTag(this List<GameObject> gameObjects, string tag)
+    public static List<GameObject> FindObjectsWithTag(this List<GameObject> gameObjects, string tag)
     {
-        foreach (var gameObject in gameObjects)
+        for (var i = 0; i < gameObjects.Count; i++)
         {
-            if (!HasTagManager(gameObject)) gameObjects.Remove(gameObject);
+            if (!HasTagManager(gameObjects[i])) gameObjects.Remove(gameObjects[i]);
 
-            var tagManager = gameObject.GetComponent<TagManager>();
+            var tagManager = gameObjects[i].GetComponent<TagManager>();
             var hasTag = tagManager.HasNameTag(tag);
             
-            if (!hasTag) gameObjects.Remove(gameObject);
+            if (!hasTag) gameObjects.Remove(gameObjects[i]);
         }
+
+        return gameObjects;
+    }
+
+    public static List<GameObject> FindObjectsWithTagInChildren(this GameObject parentObject, string tag)
+    {
+        var childObjectsWithTag = parentObject.GetComponentsInChildren<GameObject>().ToList();
+
+        for (var i = 0; i < childObjectsWithTag.Count; i++)
+        {
+            if (!HasTagManager(childObjectsWithTag[i])) childObjectsWithTag.Remove(childObjectsWithTag[i]);
+
+            var tagManager = childObjectsWithTag[i].GetComponent<TagManager>();
+            var hasTag = tagManager.HasNameTag(tag);
+            
+            if (!hasTag) childObjectsWithTag.Remove(childObjectsWithTag[i]);
+        }
+
+        return childObjectsWithTag;
     }
 }
