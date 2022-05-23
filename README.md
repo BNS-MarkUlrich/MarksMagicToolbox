@@ -18,6 +18,7 @@ Other possibilities:
 * ```gameObject.AddTagManager();``` checks if an object has a tagmanager, if not, it will add a tagmanager, if it does already, it will ignore the command and return.
 * ```gameObject.HasTagManager();``` checks if an object has a tagmanager.
 * ```gameObject.HasTag("MyTag");``` checks if an object has a tag.
+* ```gameObject.HasTags("ListOfTags");``` checks if an object has the designated tags.
 
 <br>
 
