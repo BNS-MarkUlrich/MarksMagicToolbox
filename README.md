@@ -20,6 +20,9 @@ Other possibilities:
 * ```gameObject.HasTag("MyTag");``` checks if an object has a tag.
 * ```gameObject.HasTags("ListOfTags");``` checks if an object has the designated tags.
 
+Softlinks:
+- ListExtensions (Used for the `HasTags()` method)
+
 <br>
 
 ### Health System
