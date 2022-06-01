@@ -59,7 +59,7 @@ Transform Utilities are method extensions for the transform component native to 
 A new addition to the toolbox, List Extensions will simplify the usage of lists, including but not limited by adding overloads to already existing methods.
 
 Currently my List Extensions includes only one such overload:
-* ```myList.Contains(compareList);```
+* ```myList.Contains(compareList);``` The `Contains()` overload allows you to check wether `myList` includes `compareList`. The lists do not have to be the same size nor do the items have to be in the same index.
 
 <br>
 
