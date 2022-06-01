@@ -55,6 +55,14 @@ Transform Utilities are method extensions for the transform component native to 
 
 <br>
 
+### List Extensions
+A new addition to the toolbox, List Extensions will simplify the usage of lists, including but not limited by adding overloads to already existing methods.
+
+Currently my List Extensions includes only one such overload:
+* ```myList.Contains(compareList);```
+
+<br>
+
 ### SceneBodyCleaner
 System that clears "dead bodies" from the scene once the amount of dead bodies exceeds the configurable amount.
 
