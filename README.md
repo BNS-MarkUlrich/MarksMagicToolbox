@@ -2,29 +2,6 @@
 My Unity Tools and Extensions
 
 ## Included in this Package:
-### Wave System
-Fully configurable and reusable Wave System which can spawn "creatures".
-
-Softlinks:
-- TagManager (Used for searching dead bodies in a scene, can easily be replaced by another system)
-
-<details>
-  <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152218-77b70e0f-b2a2-4f8e-bbc6-0e391754abf5.png" alt="image" width="400"/>
-</details>
-
-<br>
-
-### Health System
-Efficient Health System that does and has everything you'd expect from a health system.
-
-<details>
-  <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152539-1a5a9653-cac3-436d-b055-447831c872c2.png" alt="image" width="400"/>
-</details>
-
-<br>
-
 ### TagManager
 An "expansion" on the already existing Tag system from Unity. Currently you can only have one tag on an object, this Tag Manager allows you to add as many per object as you'd like. Also including a Remove method and a HasTag check method.
 
@@ -41,6 +18,30 @@ Other possibilities:
 * ```gameObject.AddTagManager();``` checks if an object has a tagmanager, if not, it will add a tagmanager, if it does already, it will ignore the command and return.
 * ```gameObject.HasTagManager();``` checks if an object has a tagmanager.
 * ```gameObject.HasTag("MyTag");``` checks if an object has a tag.
+* ```gameObject.HasTags("ListOfTags");``` checks if an object has the designated tags.
+
+<br>
+
+### Health System
+Efficient Health System that does and has everything you'd expect from a health system.
+
+<details>
+  <summary>Inspector Image</summary>
+  <img src="https://user-images.githubusercontent.com/71002222/166152539-1a5a9653-cac3-436d-b055-447831c872c2.png" alt="image" width="400"/>
+</details>
+
+<br>
+
+### Wave System
+Fully configurable and reusable Wave System which can spawn "creatures".
+
+Softlinks:
+- TagManager (Used for searching dead bodies in a scene, can easily be replaced by another system)
+
+<details>
+  <summary>Inspector Image</summary>
+  <img src="https://user-images.githubusercontent.com/71002222/166152218-77b70e0f-b2a2-4f8e-bbc6-0e391754abf5.png" alt="image" width="400"/>
+</details>
 
 <br>
 
