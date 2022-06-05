@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SceneGarbageCleaner<T> : MonoBehaviour
+public class SceneGarbageCleaner : MonoBehaviour
 {
     private List<GameObject> _garbageObjects = new List<GameObject>();
     [SerializeField] private int maxBodyCount = 50;

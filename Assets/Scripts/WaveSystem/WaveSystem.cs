@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 public class WaveSystem : MonoBehaviour
 {
-    [SerializeField] private int wave; // [SerializeField] = debugging
+    private int _wave;
     [SerializeField] private List<WaveConfiguration> waveConfigurations = new List<WaveConfiguration>();
 
     [SerializeField] private UnityEvent onStartWave = new UnityEvent();
@@ -20,11 +20,11 @@ public class WaveSystem : MonoBehaviour
     private int _totalCreatureAmount;
     private List<GameObject> _deadCreatures = new List<GameObject>();
     
-    public int GetWave => wave;
+    public int GetWave => _wave;
 
     private void Start()
     {
-        StartCoroutine(StarWaveTimer(wave));
+        StartCoroutine(StarWaveTimer(_wave));
     }
 
     public void StartWave(int wave)
@@ -96,13 +96,13 @@ public class WaveSystem : MonoBehaviour
         if (_canCheckCreatures) CheckCreatures();
         
         if (!_canStartWave) return;
-        StartWave(wave);
+        StartWave(_wave);
     }
 
     private IEnumerator StarWaveTimer(int wave)
     {
         var currentWave = waveConfigurations[wave];
-        var waveTimer = currentWave.waveTimer;
+        var waveTimer = currentWave.startWaveTimer;
         yield return new WaitForSeconds(waveTimer);
         
         _canStartWave = true;
@@ -134,17 +134,17 @@ public class WaveSystem : MonoBehaviour
         _canStartWave = false;
 
         if (LastWave()) return;
-        ++wave;
+        ++_wave;
         
         _totalCreatureAmount = 0;
-        StartCoroutine(StarWaveTimer(wave));
+        StartCoroutine(StarWaveTimer(_wave));
     }
 
     private bool LastWave()
     {
         var totalWaves = waveConfigurations.Count;
 
-        var isLastWave = wave >= --totalWaves;
+        var isLastWave = _wave >= --totalWaves;
         return isLastWave;
     }
 }
@@ -155,7 +155,7 @@ public struct WaveConfiguration
     public string waveName;
     
     [Header("Wave Settings")]
-    public float waveTimer;
+    public float startWaveTimer;
     public List<WaveCreatures> creatures;
 }
 
