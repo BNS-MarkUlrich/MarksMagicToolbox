@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Contains a variety of extension methods that affect the transform properties of the target.
 /// </summary>
-public static class TransformUtilities
+public static class TransformExtensions
 {
     /// <summary>
     /// Rotates the target to face the direction parameter.
