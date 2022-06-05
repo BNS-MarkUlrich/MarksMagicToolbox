@@ -14,9 +14,9 @@ An "expansion" on the already existing Tag system from Unity. Currently you can 
 The TagManager Utilities allow programmers to access the new TagManager even more easily. For example, adding a tag to an object, whether or not it has the tagmanger, can be done straight through a game object, ```gameObject.AddTag("MyTag");```. This line of code will check if the object you want to add a tag to already has a manager, if it does not, it will add one and subsequently also add this tag, if it already has a tagmanager or the tag, it will ignore the command and return.
 
 Other possibilities:
+* ```TagManagerExtentions.FindAllWithTag("MyTag");``` Returns a list of all Tag Managers that have this tag.
+* ```TagManagerExtentions.FindAllWithTags(myList);``` Returns a list of all Tag Managers that has all the tags in myList.
 * ```gameObject.RemoveTag("MyTag");``` checks if an object has a tagmanager and if it has the tag. If it does, it will remove the tag, if not, it will simply ignore the command and return.
-* ```gameObject.AddTagManager();``` checks if an object has a tagmanager, if not, it will add a tagmanager, if it does already, it will ignore the command and return.
-* ```gameObject.HasTagManager();``` checks if an object has a tagmanager.
 * ```gameObject.HasTag("MyTag");``` checks if an object has a tag.
 * ```gameObject.HasTags("ListOfTags");``` checks if an object has the designated tags.
 
@@ -30,7 +30,7 @@ Efficient Health System that does and has everything you'd expect from a health 
 
 <details>
   <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152539-1a5a9653-cac3-436d-b055-447831c872c2.png" alt="image" width="400"/>
+  <img src="https://user-images.githubusercontent.com/71002222/172047247-57b12925-a8f4-431c-aa2d-ad9edbada0db.png" alt="image" width="400"/>
 </details>
 
 <br>
@@ -43,7 +43,7 @@ Softlinks:
 
 <details>
   <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166152218-77b70e0f-b2a2-4f8e-bbc6-0e391754abf5.png" alt="image" width="400"/>
+  <img src="https://user-images.githubusercontent.com/71002222/172047280-795965a5-b95d-4058-9dfe-d205df5dd5b3.png" alt="image" width="400"/>
 </details>
 
 <br>
@@ -66,12 +66,12 @@ Currently my List Extensions includes only one such overload:
 
 <br>
 
-### SceneBodyCleaner
-System that clears "dead bodies" from the scene once the amount of dead bodies exceeds the configurable amount.
+### SceneGarbageCleaner
+System that clears "garbage bodies" from the scene once the amount of garbage bodies exceeds the configurable amount.
 
 <details>
   <summary>Inspector Image</summary>
-  <img src="https://user-images.githubusercontent.com/71002222/166153755-12a0f1be-12c4-4678-bc7d-96dba17dcf55.png" alt="image" width="400"/>
+  <img src="https://user-images.githubusercontent.com/71002222/172047303-a8896a5f-d620-47b4-90d4-7de06760b5b3.png" alt="image" width="400"/>
 </details>
 
 ###### *This is all to be expanded on later
