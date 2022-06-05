@@ -12,12 +12,13 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] private List<WaveConfiguration> waveConfigurations = new List<WaveConfiguration>();
 
     [SerializeField] private UnityEvent onStartWave = new UnityEvent();
+    [SerializeField] private UnityEvent onWaveEnd = new UnityEvent();
 
-    private bool canStartWave;
-    private bool canCheckCreatures;
+    private bool _canStartWave;
+    private bool _canCheckCreatures;
 
-    private int totalCreatureAmount;
-    private List<GameObject> deadCreatures = new List<GameObject>();
+    private int _totalCreatureAmount;
+    private List<GameObject> _deadCreatures = new List<GameObject>();
     
     public int GetWave => wave;
 
@@ -30,7 +31,7 @@ public class WaveSystem : MonoBehaviour
     {
         SpawnCreatures(wave);
         onStartWave?.Invoke();
-        canStartWave = false;
+        _canStartWave = false;
     }
 
     private void SpawnCreatures(int wave)
@@ -48,7 +49,7 @@ public class WaveSystem : MonoBehaviour
             
             currentCreature.AddTag("Enemy");
             
-            totalCreatureAmount += creatureAmount;
+            _totalCreatureAmount += creatureAmount;
 
             var spawnLocations = creature.spawnLocations;
             var spawnLocationCount = spawnLocations.Count;
@@ -62,7 +63,7 @@ public class WaveSystem : MonoBehaviour
 
             StartCoroutine(SpawnInterval(creature, currentCreature, spawnLocations, spawnLocationCount));
         }
-        canCheckCreatures = true;
+        _canCheckCreatures = true;
     }
 
     private IEnumerator SpawnInterval(WaveCreatures creature, GameObject currentCreature, List<Transform> spawnLocations, int spawnLocationCount)
@@ -92,9 +93,9 @@ public class WaveSystem : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (canCheckCreatures) CheckCreatures();
+        if (_canCheckCreatures) CheckCreatures();
         
-        if (!canStartWave) return;
+        if (!_canStartWave) return;
         StartWave(wave);
     }
 
@@ -104,8 +105,8 @@ public class WaveSystem : MonoBehaviour
         var waveTimer = currentWave.waveTimer;
         yield return new WaitForSeconds(waveTimer);
         
-        canStartWave = true;
-        deadCreatures.Clear();
+        _canStartWave = true;
+        _deadCreatures.Clear();
     }
 
     private void CheckCreatures()
@@ -116,25 +117,26 @@ public class WaveSystem : MonoBehaviour
         
         foreach (var creature in perishedCreatures)
         {
-            var containsCreature = deadCreatures.Contains(creature);
+            var containsCreature = _deadCreatures.Contains(creature);
             if (containsCreature) continue;
-            deadCreatures.Add(creature);
+            _deadCreatures.Add(creature);
         }
 
-        var endWave = totalCreatureAmount - deadCreatures.Count <= 0;
+        var endWave = _totalCreatureAmount - _deadCreatures.Count <= 0;
         if(!endWave) return;
         WaveReset();
     }
 
     private void WaveReset()
     {
-        canCheckCreatures = false;
-        canStartWave = false;
+        onWaveEnd?.Invoke();
+        _canCheckCreatures = false;
+        _canStartWave = false;
 
         if (LastWave()) return;
         ++wave;
         
-        totalCreatureAmount = 0;
+        _totalCreatureAmount = 0;
         StartCoroutine(StarWaveTimer(wave));
     }
 
