@@ -18,7 +18,7 @@ public static class HealthUtilities
         if (!HasHealthComponent(gameObject)) return;
 
         var healthComponent = gameObject.GetComponent<Health>();
-        healthComponent.Heal(health);
+        healthComponent.AddHealth(health);
     }
     
     public static void TakeDamage(this GameObject gameObject, float health)
