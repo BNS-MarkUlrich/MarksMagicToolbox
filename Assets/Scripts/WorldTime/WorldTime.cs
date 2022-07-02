@@ -22,8 +22,8 @@ public class WorldTime : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] private bool useUI = true;
-    [SerializeField] private bool showSeconds;
     [SerializeField] private Text worldClock;
+    [SerializeField] private bool showSeconds;
 
     private void Start()
     {
