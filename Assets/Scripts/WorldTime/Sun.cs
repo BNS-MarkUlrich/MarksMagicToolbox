@@ -30,11 +30,12 @@ public class Sun : MonoBehaviour
 
     private void InitSun()
     {
-        //_dayDuration = (sunset - sunrise) * 60;
+        //_dayDuration = (sunset - sunrise) * 6;
         _dayDuration = _worldTime.DayTimeInMinutes * 60;
+        //_sunRotation = startRotation.x - endRotation.x;
         _sunRotation = startRotation.x - endRotation.x;
         _stepAngle = _sunRotation / _dayDuration;
-        _stepAngle *= 2;
+        _stepAngle *= 1.5f;
     }
 
     public void ResetSunPosition()
@@ -45,14 +46,10 @@ public class Sun : MonoBehaviour
     private void FixedUpdate()
     {
         //InitSun();
-        var currentTime = (int) _worldTime.CurrentTime;
-        if (currentTime >= sunrise && currentTime <= sunset)
+        var currentTime = _worldTime.CurrentTime;
+        if (currentTime >= sunrise)
         {
             transform.RotateAround(transform.position, Vector3.right, _stepAngle * Time.fixedDeltaTime);
-        }
-        else
-        {
-            ResetSunPosition();
         }
     }
 }
