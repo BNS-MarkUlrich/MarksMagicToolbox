@@ -407,7 +407,7 @@ MonoBehaviour:
   dayTimeInMinutes: 1
   nightTimeInMinutes: 1
   useRealTime: 0
-  useUI: 1
+  useUI: 0
   worldClock: {fileID: 0}
   showSeconds: 1
   onNewDay:
@@ -626,6 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30dfb966c02b2d4fa8a14c1910d8808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentTime: 5
   sunrise: 5
   sunset: 20
   startRotation: {x: -30, y: 0, z: 0}
