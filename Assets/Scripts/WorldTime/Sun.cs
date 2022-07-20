@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(WorldTime))]
 public class Sun : MonoBehaviour
 {
     private WorldTime _worldTime;
@@ -31,7 +30,7 @@ public class Sun : MonoBehaviour
 
     private void InitWorldTime()
     {
-        _worldTime = GetComponent<WorldTime>();
+        _worldTime = FindObjectOfType<WorldTime>();
     }
 
     private void CalculateRotation()

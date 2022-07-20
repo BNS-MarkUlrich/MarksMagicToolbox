@@ -13,16 +13,15 @@ public class WorldTime : MonoBehaviour
 
     [Header("Day/Night Cycle Settings")] 
     [Range(0, 23)] [SerializeField] private int dayStartHour = 6;
-    [Range(0, 23)] [SerializeField] private int dayEndHour = 18;
+    [Range(1, 24)] [SerializeField] private int endOfDayHour = 24;
     
     [Space]
-    [Range(1, 120)] [SerializeField] private int dayInMinutes = 30;
-    [Range(1, 120)] [SerializeField] private int nightInMinutes = 15;
+    [Range(1, 120)] [SerializeField] private int dayInMinutes = 1;
     private int _timeMultiplier;
     [SerializeField] private bool useRealTime;
 
     [Header("UI Settings")]
-    [SerializeField] private bool useUI = true;
+    [SerializeField] private bool useUI;
     [SerializeField] private Text worldClock;
     [SerializeField] private bool showSeconds;
 
@@ -44,15 +43,14 @@ public class WorldTime : MonoBehaviour
     public int CurrentDay => _day;
     public float CurrentTime => _time;
     public int DayInMinutes => dayInMinutes;
-    public bool IsDayTime => _time >= dayStartHour && _time <= dayEndHour;
-    public bool IsEndOfDay => _time >= 24;
+    public bool IsEndOfDay => (int)_time == endOfDayHour;
 
     private void FixedUpdate()
     {
         if (IsEndOfDay) AddDay();
         
         if (useRealTime) ScaleTime();
-        else ScaleTime(IsDayTime? dayInMinutes : nightInMinutes);
+        else ScaleTime(dayInMinutes);
         
         FillUI();
         AddTime();
@@ -60,7 +58,7 @@ public class WorldTime : MonoBehaviour
 
     private void AddTime()
     {
-        _time += Time.deltaTime / 3600 * _timeMultiplier;
+        _time += Time.fixedDeltaTime / 3600 * _timeMultiplier;
     }
 
     private void ScaleTime(int timeInMinutes = 720)
