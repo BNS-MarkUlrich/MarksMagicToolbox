@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class WorldTime : MonoBehaviour
@@ -25,6 +26,9 @@ public class WorldTime : MonoBehaviour
     [SerializeField] private Text worldClock;
     [SerializeField] private bool showSeconds;
 
+    [Header("Unity Events")] 
+    [SerializeField] private UnityEvent onNewDay;
+
     private void Start()
     {
         InitClock();
@@ -39,18 +43,23 @@ public class WorldTime : MonoBehaviour
 
     public int CurrentDay => _day;
     public float CurrentTime => _time;
-    
+    public int DayTimeInMinutes => dayTimeInMinutes;
     public bool IsDayTime => _time >= dayStartHour && _time <= dayEndHour;
+    private bool IsEndOfDay => _time >= 24;
 
     private void FixedUpdate()
     {
-        if (_time >= 24) AddDay();
+        if (IsEndOfDay) AddDay();
         
         if (useRealTime) ScaleTime();
         else ScaleTime(IsDayTime? dayTimeInMinutes : nightTimeInMinutes);
-
-
+        
         FillUI();
+        AddTime();
+    }
+
+    private void AddTime()
+    {
         _time += Time.deltaTime / 3600 * _timeMultiplier;
     }
 
@@ -81,14 +90,15 @@ public class WorldTime : MonoBehaviour
         worldClock.text = "Day: " + _day + "\n" + FormatTime();
     }
 
-    private void ResetTime()
-    {
-        _time = 0;
-    }
-
-    private void AddDay()
+    public void AddDay()
     {
         ResetTime();
         ++_day;
+        onNewDay?.Invoke();
+    }
+
+    private void ResetTime()
+    {
+        _time = 0;
     }
 }
