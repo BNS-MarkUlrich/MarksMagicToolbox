@@ -153,6 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  onHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
   onHealthAdded:
     m_PersistentCalls:
       m_Calls: []
@@ -162,11 +165,10 @@ MonoBehaviour:
   onDie:
     m_PersistentCalls:
       m_Calls: []
-  onRessurected:
+  onResurrected:
     m_PersistentCalls:
       m_Calls: []
   isDead: 0
-  canResurrect: 0
 --- !u!4 &40706330
 Transform:
   m_ObjectHideFlags: 0
@@ -234,6 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 196040726}
+  - component: {fileID: 196040727}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Untagged
@@ -255,6 +258,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &196040727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196040725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665c672f2e2777c47b3254da291fff52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  onHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  onHealthAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  onDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+  onDie:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 196040727}
+        m_TargetAssemblyTypeName: HealthData, Assembly-CSharp
+        m_MethodName: DestroySelf
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onResurrected:
+    m_PersistentCalls:
+      m_Calls: []
+  isDead: 0
 --- !u!1 &218733336
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +402,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb5739392dde8a4bb74d1e77e935a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wave: 0
   waveConfigurations:
   - waveName: Begin Wave
     startWaveTimer: 1
@@ -615,6 +658,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1116319141}
+  - component: {fileID: 1116319142}
   m_Layer: 0
   m_Name: Orc
   m_TagString: Untagged
@@ -636,6 +680,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1116319142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116319140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665c672f2e2777c47b3254da291fff52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 200
+  onHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  onHealthAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  onDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onResurrected:
+    m_PersistentCalls:
+      m_Calls: []
+  isDead: 0
 --- !u!1 &1891155275
 GameObject:
   m_ObjectHideFlags: 0
