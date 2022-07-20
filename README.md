@@ -25,7 +25,13 @@ Softlinks:
 
 <br>
 
+### Time System
+Under construction.
+
+<br>
+
 ### Health System
+NOTE: The below description is outdated. This is to be updated soon.
 Efficient Health System that does and has everything you'd expect from a health system.
 
 <details>
