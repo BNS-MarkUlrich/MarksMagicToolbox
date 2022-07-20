@@ -26,7 +26,7 @@ Softlinks:
 <br>
 
 ### Time System
-Under construction.
+Description to be added soon.
 
 <br>
 
