@@ -16,8 +16,8 @@ public class WorldTime : MonoBehaviour
     [Range(0, 23)] [SerializeField] private int dayEndHour = 18;
     
     [Space]
-    [Range(1, 120)] [SerializeField] private int dayTimeInMinutes = 30;
-    [Range(1, 120)] [SerializeField] private int nightTimeInMinutes = 15;
+    [Range(1, 120)] [SerializeField] private int dayInMinutes = 30;
+    [Range(1, 120)] [SerializeField] private int nightInMinutes = 15;
     private int _timeMultiplier;
     [SerializeField] private bool useRealTime;
 
@@ -27,7 +27,7 @@ public class WorldTime : MonoBehaviour
     [SerializeField] private bool showSeconds;
 
     [Header("Unity Events")] 
-    [SerializeField] private UnityEvent onNewDay;
+    public UnityEvent onNewDay;
 
     private void Start()
     {
@@ -43,16 +43,16 @@ public class WorldTime : MonoBehaviour
 
     public int CurrentDay => _day;
     public float CurrentTime => _time;
-    public int DayTimeInMinutes => dayTimeInMinutes;
+    public int DayInMinutes => dayInMinutes;
     public bool IsDayTime => _time >= dayStartHour && _time <= dayEndHour;
-    private bool IsEndOfDay => _time >= 24;
+    public bool IsEndOfDay => _time >= 24;
 
     private void FixedUpdate()
     {
         if (IsEndOfDay) AddDay();
         
         if (useRealTime) ScaleTime();
-        else ScaleTime(IsDayTime? dayTimeInMinutes : nightTimeInMinutes);
+        else ScaleTime(IsDayTime? dayInMinutes : nightInMinutes);
         
         FillUI();
         AddTime();
