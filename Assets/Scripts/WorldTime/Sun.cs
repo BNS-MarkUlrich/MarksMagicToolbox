@@ -26,6 +26,7 @@ public class Sun : MonoBehaviour
     private void Start()
     {
         InitWorldTime();
+        CalculateRotation();
     }
 
     private void InitWorldTime()
@@ -33,13 +34,17 @@ public class Sun : MonoBehaviour
         _worldTime = GetComponent<WorldTime>();
     }
 
+    private void CalculateRotation()
+    {
+        _dayDuration = sunset - sunrise;
+        _sunRotation = 360 - (_startRotation.x - _endRotation.x);
+        _rotationMultiplier = _sunRotation / _dayDuration;
+    }
+
     private void RotateSun()
     {
         var newSunRotation = Vector3.zero;
         
-        _dayDuration = sunset - sunrise;
-        _sunRotation = 360 - (_startRotation.x - _endRotation.x);
-        _rotationMultiplier = _sunRotation / _dayDuration;
         _timeMultiplier = _worldTime.CurrentTime - sunrise;
         _additionMultiplier = _timeMultiplier * _rotationMultiplier;
         _currentSunRotation = _startRotation.x +  _additionMultiplier;
