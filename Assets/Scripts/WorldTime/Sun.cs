@@ -16,6 +16,8 @@ public class Sun : MonoBehaviour
     private float _sunRotation;
     private float _stepAngle;
 
+    private float _currentTimeMultiplier;
+
     private void Start()
     {
         InitWorldTime();
@@ -45,7 +47,11 @@ public class Sun : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //InitSun();
+        /*_currentTimeMultiplier = _worldTime.CurrentTime / 24;
+        _sunRotation = startRotation.x / _currentTimeMultiplier;
+        transform.eulerAngles = new Vector3(_sunRotation, 0, 0);*/
+        
+        
         var currentTime = _worldTime.CurrentTime;
         if (currentTime >= sunrise)
         {
