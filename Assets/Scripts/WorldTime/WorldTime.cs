@@ -9,7 +9,7 @@ public class WorldTime : MonoBehaviour
 {
     private int _day;
     private float _time;
-    [Range(0, 23)] [SerializeField] private int startHour = 12;
+    [Range(0, 23)] [SerializeField] private int startHour = 6;
 
     [Header("Day/Night Cycle Settings")] 
     [Range(0, 23)] [SerializeField] private int dayStartHour = 6;

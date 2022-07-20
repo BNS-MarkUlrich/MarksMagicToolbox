@@ -26,7 +26,6 @@ public class Sun : MonoBehaviour
     private void Start()
     {
         InitWorldTime();
-        _worldTime.onNewDay.AddListener(ResetSunPosition);
     }
 
     private void InitWorldTime()
@@ -48,11 +47,6 @@ public class Sun : MonoBehaviour
         newSunRotation.x = _currentSunRotation;
 
         transform.eulerAngles = newSunRotation;
-    }
-    
-    public void ResetSunPosition()
-    {
-        transform.eulerAngles = _startRotation;
     }
 
     private void FixedUpdate()
