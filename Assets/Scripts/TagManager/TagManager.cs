@@ -28,10 +28,21 @@ public class TagManager : MonoBehaviour
         if (!tags.Contains(tag)) return;
         tags.Remove(tag);
     }
+    
+    public void RemoveTag(int index)
+    {
+        if (!tags.Contains(tags[index])) return;
+        tags.RemoveAt(index);
+    }
 
     public bool HasTag(string tag)
     {
         return tags.Contains(tag);
+    }
+    
+    public bool HasTag(List<string> tagList)
+    {
+        return tags.ContainsAny(tagList);
     }
     
     public bool HasTags(List<string> tagList)

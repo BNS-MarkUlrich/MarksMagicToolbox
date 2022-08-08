@@ -112,8 +112,14 @@ public class WaveSystem : MonoBehaviour
     private void CheckCreatures()
     {
         var allObjects = FindObjectsOfType<GameObject>();
-        
-        var perishedCreatures = allObjects.Where(creature => creature.gameObject.HasTag("Enemy") && creature.gameObject.HasTag("Dead")).ToList();
+
+        var tagList = new List<string>
+        {
+            "Enemy",
+            "Dead"
+        };
+
+        var perishedCreatures = allObjects.Where(creature => creature.gameObject.HasTags(tagList)).ToList();
         
         foreach (var creature in perishedCreatures)
         {

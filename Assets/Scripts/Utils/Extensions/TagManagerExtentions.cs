@@ -73,7 +73,7 @@ public static class TagManagerExtentions
     }
     
     /// <summary>
-    /// Removes a tag to the gameobject.
+    /// Removes a tag from the gameobject.
     /// </summary>
     public static void RemoveTag(this GameObject gameObject, string tag)
     {
@@ -81,6 +81,17 @@ public static class TagManagerExtentions
 
         var tagManager = gameObject.GetComponent<TagManager>();
         tagManager.RemoveTag(tag);
+    }
+    
+    /// <summary>
+    /// Removes a tag from the gameobject at index.
+    /// </summary>
+    public static void RemoveTag(this GameObject gameObject, int index)
+    {
+        if (!HasTagManager(gameObject)) return;
+
+        var tagManager = gameObject.GetComponent<TagManager>();
+        tagManager.RemoveTag(index);
     }
     
     /// <summary>
@@ -92,6 +103,18 @@ public static class TagManagerExtentions
         if (!HasTagManager(gameObject)) return false;
 
         var hasNameTag = gameObject.GetComponent<TagManager>().HasTag(tag);
+        return hasNameTag;
+    }
+    
+    /// <summary>
+    /// Returns true if object has any of the tags.
+    /// </summary>
+    /// <returns></returns>
+    public static bool HasTag(this GameObject gameObject, List<string> tagList)
+    {
+        if (!HasTagManager(gameObject)) return false;
+
+        var hasNameTag = gameObject.GetComponent<TagManager>().HasTag(tagList);
         return hasNameTag;
     }
     
