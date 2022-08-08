@@ -16,9 +16,11 @@ The TagManager Utilities allow programmers to access the new TagManager even mor
 Other possibilities:
 * ```TagManagerExtentions.FindAllWithTag("MyTag");``` Returns a list of all Tag Managers that have this tag.
 * ```TagManagerExtentions.FindAllWithTags(myList);``` Returns a list of all Tag Managers that has all the tags in myList.
-* ```gameObject.RemoveTag("MyTag");``` checks if an object has a tagmanager and if it has the tag. If it does, it will remove the tag, if not, it will simply ignore the command and return.
+* ```gameObject.RemoveTag("MyTag");``` Removes specified tag from tags list.
+* ```gameObject.RemoveTag(Index);``` Removes tag at specified index.
 * ```gameObject.HasTag("MyTag");``` checks if an object has a tag.
-* ```gameObject.HasTags("ListOfTags");``` checks if an object has the designated tags.
+* ```gameObject.HasTag(ListOfTags);``` checks if an object has any of the specified tags.
+* ```gameObject.HasTags(ListOfTags);``` checks if an object has the designated tags.
 
 Softlinks:
 - ListExtensions (Used for the `HasTags()` method)
@@ -67,8 +69,9 @@ Transform Utilities are method extensions for the transform component native to 
 ### List Extensions
 A new addition to the toolbox, List Extensions will simplify the usage of lists, including but not limited to adding overloads to already existing methods.
 
-Currently my List Extensions includes only one such overload:
+List Extensions:
 * ```myList.Contains(compareList);``` The `Contains()` overload allows you to check wether `myList` includes `compareList`. The lists do not have to be the same size nor do the items have to be in the same index.
+* ```myList.ContainsAny(compareList);``` Checks if compareTarget includes any of target List. The lists do not have to be the same size nor do the items have to be in the same index.
 
 <br>
 
