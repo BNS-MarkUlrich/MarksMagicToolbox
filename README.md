@@ -6,8 +6,6 @@ Enter the realm of Mark's Magic Toolbox repository! Within, discover an assortme
 
 Mark's Magic Toolbox includes a variety of scripts, extensions, and utilities designed to simplify common tasks in Unity game development. From transforming objects to managing tags and health data, this toolbox aims to enhance your project's capabilities and improve efficiency.
 
-## Wiki
-
 ### [Wiki HomePage](https://github.com/BNS-MarkUlrich/MarksMagicToolbox/wiki)
 Check out the Wiki, where you will find all documentation associated with the features included in this toolbox!
 
