@@ -6,21 +6,10 @@ Enter the realm of Mark's Magic Toolbox repository! Within, discover an assortme
 
 Mark's Magic Toolbox includes a variety of scripts, extensions, and utilities designed to simplify common tasks in Unity game development. From transforming objects to managing tags and health data, this toolbox aims to enhance your project's capabilities and improve efficiency.
 
-## Wiki Sections - Features
+## Wiki
 
-### [Health Data Management](https://github.com/BNS-MarkUlrich/MarksMagicToolbox/wiki/Health-Data-Management)
-Learn about a class designed to manage health-related data for game characters or entities.
-
-## Wiki Sections - Extensions
-
-### [Transform Extensions](https://github.com/BNS-MarkUlrich/MarksMagicToolbox/wiki/Transform-Extensions)
-Discover extension methods that manipulate the transform properties of GameObjects.
-
-### [Tag Manager Extensions](https://github.com/BNS-MarkUlrich/MarksMagicToolbox/wiki/Tag-Manager-Extensions)
-Explore utilities for managing tags associated with game objects.
-
-### [List Extensions](https://github.com/BNS-MarkUlrich/MarksMagicToolbox/wiki/List-Extensions)
-Explore extensions for working with lists, checking inclusion relationships, and more.
+### [Wiki HomePage](https://github.com/BNS-MarkUlrich/MarksMagicToolbox/wiki)
+Check out the Wiki, where you will find all documentation associated with the features included in this toolbox!
 
 ## License
 
