@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public static class ListExtensions
 {
@@ -32,7 +30,7 @@ public static class ListExtensions
     /// <param name="list">The original list.</param>
     /// <param name="excludeParams">The elements to exclude from the list.</param>
     /// <returns>A new list without the specified elements.</returns>
-    public static List<T> GetListWithout<T>(List<T> list, params T[] excludeParams) 
+    public static List<T> GetListWithout<T>(this List<T> list, params T[] excludeParams) 
         => list.Where(wp => !excludeParams.Contains(wp)).ToList();
 
     /// <summary>
@@ -43,6 +41,14 @@ public static class ListExtensions
     /// <param name="excludeList">The list of elements to exclude.</param>
     /// <param name="excludeParams">The individual elements to exclude.</param>
     /// <returns>A new list that contains all elements from the input list, excluding elements from the excludeList and excludeParams.</returns>
-    public static List<T> GetListWithout<T>(List<T> list, List<T> excludeList, params T[] excludeParams) 
+    public static List<T> GetListWithout<T>(this List<T> list, List<T> excludeList, params T[] excludeParams) 
         => list.Where(wp => !excludeList.Contains(wp) && !excludeParams.Contains(wp)).ToList();
+
+    /// <summary>
+    /// Adds the elements of the specified array to the end of the list.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the list.</typeparam>
+    /// <param name="list">The list to add the elements to.</param>
+    /// <param name="elements">The elements to add to the list.</param>
+    public static void AddRange<T>(this List<T> list, params T[] elements) => list.AddRange(elements);
 }
