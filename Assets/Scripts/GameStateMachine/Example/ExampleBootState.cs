@@ -1,22 +1,25 @@
-public class ExampleBootState : State
+namespace GameStateMachine
 {
-    private const string LOAD_SCENE_NAME = "Statemachine";
-
-    /// <summary>
-    /// Executes code related to entering the Boot state.
-    /// </summary>
-    public override void EnterState()
+    public class ExampleBootState : State
     {
-        base.EnterState();
-        SetNextState<ExampleMainMenuState>();
+        private const string LOAD_SCENE_NAME = "Statemachine";
 
-        LoadScene(LOAD_SCENE_NAME);
-        
-        MoveToNextState();
+        /// <summary>
+        /// Executes code related to entering the Boot state.
+        /// </summary>
+        public override void EnterState()
+        {
+            base.EnterState();
+            SetNextState<ExampleMainMenuState>();
+
+            LoadScene(LOAD_SCENE_NAME);
+            
+            MoveToNextState();
+        }
+
+        /// <summary>
+        /// Executes code related to leaving the Boot state.
+        /// </summary>
+        public override void ExitState() =>  base.ExitState();
     }
-
-    /// <summary>
-    /// Executes code related to leaving the Boot state.
-    /// </summary>
-    public override void ExitState() =>  base.ExitState();
 }

@@ -1,16 +1,19 @@
-public class ExampleMainMenuState : State
+namespace GameStateMachine
 {
-    /// <summary>
-    /// Executes code related to entering the Main Menu state.
-    /// </summary>
-    public override void EnterState()
+    public class ExampleMainMenuState : State
     {
-        base.EnterState();
-        SetNextState<ExampleGameState>();
-    }
+        /// <summary>
+        /// Executes code related to entering the Main Menu state.
+        /// </summary>
+        public override void EnterState()
+        {
+            base.EnterState();
+            SetNextState<ExampleGameState>();
+        }
 
-    /// <summary>
-    /// Executes code related to leaving the Main Menu state.
-    /// </summary>
-    public override void ExitState() => base.ExitState();
+        /// <summary>
+        /// Executes code related to leaving the Main Menu state.
+        /// </summary>
+        public override void ExitState() => base.ExitState();
+    }
 }
