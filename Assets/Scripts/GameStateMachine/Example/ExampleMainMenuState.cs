@@ -1,4 +1,4 @@
-public class MainMenuState : State
+public class ExampleMainMenuState : State
 {
     /// <summary>
     /// Executes code related to entering the Main Menu state.
@@ -6,11 +6,11 @@ public class MainMenuState : State
     public override void EnterState()
     {
         base.EnterState();
-        SetNextState<TutorialState>();
+        SetNextState<ExampleGameState>();
     }
 
     /// <summary>
     /// Executes code related to leaving the Main Menu state.
     /// </summary>
-    public override void ExitState() =>  base.ExitState();
+    public override void ExitState() => base.ExitState();
 }

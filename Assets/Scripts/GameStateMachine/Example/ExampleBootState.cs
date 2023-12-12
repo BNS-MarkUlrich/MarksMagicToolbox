@@ -1,6 +1,6 @@
-public class BootState : State
+public class ExampleBootState : State
 {
-    private const string LOAD_SCENE_NAME = "Develop";
+    private const string LOAD_SCENE_NAME = "Statemachine";
 
     /// <summary>
     /// Executes code related to entering the Boot state.
@@ -8,9 +8,9 @@ public class BootState : State
     public override void EnterState()
     {
         base.EnterState();
-        SetNextState<MainMenuState>();
+        SetNextState<ExampleMainMenuState>();
 
-        //LoadScene(LOAD_SCENE_NAME);
+        LoadScene(LOAD_SCENE_NAME);
         
         MoveToNextState();
     }

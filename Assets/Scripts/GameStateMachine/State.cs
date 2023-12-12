@@ -22,8 +22,15 @@ public abstract class State
     protected void SetNextState<TState>() where TState: State, new() 
         => _nextState = GameStateMachine.GetState<TState>();
 
-    protected void LoadScene(string sceneName)
+    protected void LoadScene(string sceneName, bool forceRelead = false)
     {
+        if (forceRelead)
+        {
+            SceneManager.LoadScene(sceneName);
+            Debug.Log($"Loaded Scene ({sceneName})");
+            return;
+        }
+
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(sceneName))
             return;
         

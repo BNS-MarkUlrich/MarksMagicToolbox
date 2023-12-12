@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public static class GameStateMachine
 {
@@ -42,6 +40,13 @@ public static class GameStateMachine
     }
 
     /// <summary>
+    /// Sets the current state to the state parsed in the Type param.
+    /// </summary>
+    /// <typeparam name="TState">The type reference of the state to change to.</typeparam>
+    internal static void SetState<TState>() where TState: State, new() 
+        => SetState(GetState<TState>());
+
+    /// <summary>
     /// Moves the current state to the next state set in the state.
     /// </summary>
     internal static void MoveToNextState() => CurrentState.MoveToNextState();
@@ -71,28 +76,5 @@ public static class GameStateMachine
     {
         State parameterState = new TState();
         return States.FirstOrDefault(state => state.ToString() == parameterState.ToString()) ?? parameterState;
-    }
-    
-    /// <summary>
-    /// Sets the current state to the state parsed in the Type param.
-    /// </summary>
-    /// <typeparam name="TState">The type reference of the state to change to.</typeparam>
-    internal static void SetState<TState>() where TState: State, new() 
-        => SetState(GetState<TState>());
-
-    /// <summary>
-    /// Triggers the OnWinGame Action from the WaveState.
-    /// </summary>
-    internal static void WinGame()
-    {
-        WaveState.OnWinGame?.Invoke();
-    }
-
-    /// <summary>
-    /// Triggers the OnLoseGame Action from the WaveState.
-    /// </summary>
-    internal static void LoseGame()
-    {
-        WaveState.OnLoseGame?.Invoke();
     }
 }
