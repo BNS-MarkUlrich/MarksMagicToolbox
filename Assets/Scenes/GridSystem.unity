@@ -294,9 +294,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridOrigin: {fileID: 0}
-  width: 50
-  height: 50
-  cellSize: 1
+  width: 55
+  height: 55
+  cellSize: 0.5
   elevationThreshold: 2
   walkableSurfaceLayer:
     serializedVersion: 2
