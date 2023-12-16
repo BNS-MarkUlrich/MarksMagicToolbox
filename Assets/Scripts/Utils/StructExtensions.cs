@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-public static class StructExtension
+public static class StructExtensions
 {
     /// <summary>
     /// Sets the value of a field in a struct. Tip: use nameof() to get the field name.
