@@ -30,6 +30,8 @@ public class TPMovement : Movement
     [Header("Pilot Options")]
     [SerializeField] protected bool isBrakingAutomatically;
 
+    protected bool IsGrounded => Physics.SphereCast(transform.position, transform.localScale.x/2, Vector3.down, out _, 0.6f);
+
     protected override void Awake()
     {
         base.Awake();
@@ -39,6 +41,11 @@ public class TPMovement : Movement
 
     public void ApplyForwardThrust(float thrustMultiplier)
     {
+        if (!IsGrounded)
+        {
+            return;
+        }
+
         if (thrustMultiplier == 0)
         {
             forwardThrust = 0;
@@ -49,6 +56,8 @@ public class TPMovement : Movement
                 currentSpeed = Mathf.Lerp(currentSpeed, 0,  Time.deltaTime * 2);
                 currentSpeed = Mathf.Clamp(currentSpeed, 0, maxSpeed);
             }
+            
+            return;
         }
         else if (thrustMultiplier > 0)
         {
@@ -64,6 +73,7 @@ public class TPMovement : Movement
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, maxReverseSpeed, maxSpeed);
+
         MyRigidBody.velocity = transform.forward.normalized * (currentSpeed * Time.deltaTime);
     }
 
@@ -180,8 +190,6 @@ public class TPMovement : Movement
 
         transform.rotation = Quaternion.Slerp(rotation, targetRotation, rotationVelocity.magnitude * Time.deltaTime / Mass);
     }
-    
-    // Experimental
 
     private static Vector2 EaseOutVelocity(Vector2 velocity, float maxThrust)
     {
@@ -198,5 +206,20 @@ public class TPMovement : Movement
         var position = transform.position;
         var targetRotation = Quaternion.LookRotation(targetPosition - position);
         AlignRotation(targetRotation);
+    }
+
+    private void FixedUpdate() 
+    {
+        // Apply gravity
+        MyRigidBody.velocity += Vector3.down * (MyRigidBody.mass / 10) * (9.81f / 2) * Time.deltaTime;
+    }
+
+    // Jump method
+    public void Jump(float jumpHeight)
+    {
+        if (!IsGrounded) return;
+
+        MyRigidBody.AddForce(Vector3.up * Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y), ForceMode.VelocityChange);
+        // MyRigidBody.AddForce(transform.forward * Mathf.Sqrt(jumpHeight/2 * -2f * Physics.gravity.y), ForceMode.Acceleration);
     }
 }

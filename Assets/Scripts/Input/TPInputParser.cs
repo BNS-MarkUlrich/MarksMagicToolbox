@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TPInputParser : InputParser
 {
@@ -14,11 +15,13 @@ public class TPInputParser : InputParser
     protected override void AddListeners(out bool hasListeners)
     {
         hasListeners = true;
+        ControlsActions["Jump"].performed += Jump;
     }
 
     protected override void RemoveListeners()
     {
         if (!HasListeners) return;
+        ControlsActions["Jump"].performed -= Jump;
     }
 
     private void FixedUpdate()
@@ -60,5 +63,10 @@ public class TPInputParser : InputParser
     private void ZoomCamera(Vector2 zoomDelta)
     {
         rtsCameraMovement.ZoomRTSCamera(zoomDelta);
+    }
+
+    private void Jump(InputAction.CallbackContext _)
+    {
+        tpMovement.Jump(3);
     }
 }
