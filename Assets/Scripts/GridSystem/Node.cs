@@ -8,6 +8,7 @@ public class Node
     public List<Node> connectedNodes;
     public float elevation;
     public float maxElevationDifference;
+    public float maxConnectionDistance;
     public bool isWalkable; // Represents if the node is walkable or not
 
     public Node(Vector3 pos)
@@ -16,26 +17,33 @@ public class Node
         connectedNodes = new List<Node>();
         elevation = 0f;
         maxElevationDifference = 1f;
+        maxConnectionDistance = 1.5f;
         isWalkable = true; // Set to true by default
     }
 
     public void AddConnectedNode(Node node)
     {
         float elevationDifference = CalculateElevation(node);
+        float distance = CalculateDistance(node);
         float angle = CalculateAngle(node);
 
-        if (elevationDifference <= maxElevationDifference)
+        if (elevationDifference <= maxElevationDifference && distance <= maxConnectionDistance)
         {
             connectedNodes.Add(node);
         }
     }
 
-    public float CalculateElevation(Node otherNode)
+    private float CalculateElevation(Node otherNode)
     {
         return Mathf.Abs(elevation - otherNode.elevation);
     }
 
-    public float CalculateAngle(Node otherNode)
+    private float CalculateDistance(Node otherNode)
+    {
+        return Vector3.Distance(position, otherNode.position);
+    }
+
+    private float CalculateAngle(Node otherNode)
     {
         return Vector3.Angle(position, otherNode.position);
     }

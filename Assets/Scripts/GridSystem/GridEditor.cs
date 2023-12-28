@@ -15,6 +15,16 @@ public class GridEditor : Editor
             grid.CreateGrid();
         }
 
+        if (GUILayout.Button("Connect Grids"))
+        {
+            grid.ConnectGrids();
+        }
+
+        if (GUILayout.Button("Disconnect Grids"))
+        {
+            grid.DisconnectGrids();
+        }
+
         if (GUILayout.Button("Clear Grid"))
         {
             grid.ClearGrid();

@@ -11,6 +11,8 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private LayerMask walkableLayerMask;
     [SerializeField] private LayerMask obstacleLayerMask;
 
+    [SerializeField] private List<GridSystem> connectedGrids;
+
     public void CreateGrid()
     {
         Vector3 startPosition = transform.position;
@@ -29,31 +31,6 @@ public class GridSystem : MonoBehaviour
                     newNode.elevation = elevation;
                     newNode.position = new Vector3(nodePosition.x, elevation, nodePosition.z);
                     newNode.isWalkable = true;
-
-                    // Check if there is a walkable area under the current node
-                    // If there is, create a new node with the same position but with the elevation of the walkable area
-                    // Concatenate the new node to the nodes array
-                    // if (IsWalkableArea(newNode.position, out float elevation2))
-                    // {
-                    //     Node extraNode = new Node(newNode.position)
-                    //     {
-                    //         elevation = elevation2,
-                    //         position = new Vector3(newNode.position.x, elevation2, newNode.position.z),
-                    //         isWalkable = true
-                    //     };
-
-                    //     // Concatenate the extraNode to the nodes array
-                    //     Node[,] newNodes = new Node[gridSizeX + 1, gridSizeY + 1];
-                    //     for (int i = 0; i < gridSizeX; i++)
-                    //     {
-                    //         for (int j = 0; j < gridSizeY; j++)
-                    //         {
-                    //             newNodes[i, j] = nodes[i, j];
-                    //         }
-                    //     }
-                    //     newNodes[gridSizeX, gridSizeY] = extraNode;
-                    //     nodes = newNodes;
-                    // }
                 }
                 else
                 {
@@ -85,7 +62,7 @@ public class GridSystem : MonoBehaviour
         // Perform the raycast
         if (Physics.Raycast(ray, out hit, maxRaycastDistance, walkableLayerMask))
         {
-            elevation = hit.point.y;
+            elevation = hit.point.y + 0.1f;
             return true; // If walkable terrain is hit
         }
 
@@ -130,8 +107,74 @@ public class GridSystem : MonoBehaviour
         nodes = null;
     }
 
+    public void ConnectGrids()
+    {
+        foreach (GridSystem otherGrid in connectedGrids)
+        {
+            ConnectNodesBetweenGrids(otherGrid);
+        }
+    }
+
+    public void DisconnectGrids()
+    {
+        foreach (GridSystem otherGrid in connectedGrids)
+        {
+            DisconnectNodesBetweenGrids(otherGrid);
+        }
+    }
+
+    private void DisconnectNodesBetweenGrids(GridSystem otherGrid)
+    {
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                Node currentNode = nodes[x, y];
+
+                foreach (Node otherNode in otherGrid.nodes)
+                {
+                    if (otherNode == null)
+                        continue;
+
+                    currentNode.connectedNodes.Remove(otherNode);
+                }
+            }
+        }
+    }
+
+    private void ConnectNodesBetweenGrids(GridSystem otherGrid)
+    {
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                Node currentNode = nodes[x, y];
+
+                CheckAndConnectNeighboringNodes(otherGrid, currentNode, x, y);
+            }
+        }
+    }
+
+    private void CheckAndConnectNeighboringNodes(GridSystem otherGrid, Node currentNode, int x, int y)
+    {
+        foreach (Node otherNode in otherGrid.nodes)
+        {
+            if (otherNode == null)
+                continue;
+
+            if (otherNode.isWalkable)
+            {
+                currentNode.AddConnectedNode(otherNode);
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
+        // draw a bounding box around the grid based on grid size
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position + new Vector3(gridSizeX * nodeDistance / 2f, 0, gridSizeY * nodeDistance / 2f), new Vector3(gridSizeX * nodeDistance, 0, gridSizeY * nodeDistance));
+
         if (nodes != null)
         {
             foreach (Node node in nodes)
