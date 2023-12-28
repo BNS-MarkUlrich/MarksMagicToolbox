@@ -15,17 +15,8 @@ public class GridEditor : Editor
             grid.CreateGrid();
         }
 
-        if (GUILayout.Button("Connect Grids"))
-        {
-            grid.ConnectGrids();
-        }
-
-        grid.ConnectGrids();
-
-        if (GUILayout.Button("Disconnect Grids"))
-        {
-            grid.DisconnectGrids();
-        }
+        //grid.ConnectGrids();
+        grid.MergeAllGrids();
 
         if (GUILayout.Button("Clear Grid"))
         {
