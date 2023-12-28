@@ -16,7 +16,7 @@ public class Node
         position = pos;
         connectedNodes = new List<Node>();
         elevation = 0f;
-        maxElevationDifference = 1f;
+        maxElevationDifference = 0.6f;
         maxConnectionDistance = 1.5f;
         isWalkable = true; // Set to true by default
     }

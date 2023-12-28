@@ -20,6 +20,8 @@ public class GridEditor : Editor
             grid.ConnectGrids();
         }
 
+        grid.ConnectGrids();
+
         if (GUILayout.Button("Disconnect Grids"))
         {
             grid.DisconnectGrids();

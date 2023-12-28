@@ -13,6 +13,12 @@ public class GridSystem : MonoBehaviour
 
     [SerializeField] private List<GridSystem> connectedGrids;
 
+    private void Start() 
+    {
+        CreateGrid();
+        ConnectGrids();
+    }
+
     public void CreateGrid()
     {
         Vector3 startPosition = transform.position;
@@ -109,8 +115,17 @@ public class GridSystem : MonoBehaviour
 
     public void ConnectGrids()
     {
+        if (nodes == null)
+            return; 
+
+        if (connectedGrids == null)
+            return;
+
         foreach (GridSystem otherGrid in connectedGrids)
         {
+            if (otherGrid.nodes == null)
+                continue;
+
             ConnectNodesBetweenGrids(otherGrid);
         }
     }
