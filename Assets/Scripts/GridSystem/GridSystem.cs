@@ -68,7 +68,7 @@ public class GridSystem : MonoBehaviour
         // Perform the raycast
         if (Physics.Raycast(ray, out hit, maxRaycastDistance, walkableLayerMask))
         {
-            elevation = hit.point.y + 0.1f;
+            elevation = hit.point.y + 0.2f;
             return true; // If walkable terrain is hit
         }
 
@@ -101,6 +101,14 @@ public class GridSystem : MonoBehaviour
                 Node otherNode = nodes[i, j];
 
                 if (otherNode == null)
+                    continue;
+                
+                // perform linecast between nodes to check for obstacles
+                Vector3 direction = otherNode.position - currentNode.position;
+                float distance = Vector3.Distance(currentNode.position, otherNode.position);
+                Ray ray = new Ray(currentNode.position, direction);
+
+                if (Physics.Linecast(ray.origin, ray.origin + ray.direction * distance))
                     continue;
 
                 currentNode.AddConnectedNode(otherNode);
