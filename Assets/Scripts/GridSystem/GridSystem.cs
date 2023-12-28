@@ -1,143 +1,156 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-
-[CustomEditor(typeof(GridSystem))]
-public class GridSystemEditor : Editor
-{
-    private GridSystem gridSystem;
-
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        gridSystem = (GridSystem)target;
-
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Editor Actions", EditorStyles.boldLabel);
-
-        if (GUILayout.Button("Create Grid"))
-        {
-            gridSystem.CreateGrid();
-        }
-    }
-}
-#endif
 
 public class GridSystem : MonoBehaviour
 {
-    [SerializeField] private Transform gridOrigin;
-    [SerializeField] private int width = 50;
-    [SerializeField] private int height = 50;
-    [SerializeField] private float cellSize = 1f;
-    [SerializeField] private float elevationThreshold = 5f;
-    [SerializeField] private Node[,] grid;
-    public LayerMask walkableSurfaceLayer; // Layer mask to identify walkable surfaces
+    [SerializeField] private float maxElevationDetection = 10f;
+    public int gridSizeX, gridSizeY;
+    public float nodeDistance = 1f;
+    public Node[,] nodes;
+    [SerializeField] private LayerMask walkableLayerMask;
+    [SerializeField] private LayerMask obstacleLayerMask;
 
-    public Node[,] Grid { get { return grid; } }
-
-    public GridSystem(int width, int height, float cellSize)
-    {
-        this.width = width;
-        this.height = height;
-        this.cellSize = cellSize;
-        grid = new Node[width, height];
-        CreateGrid();
-    }
-
-    [ContextMenu("Create Grid")]
     public void CreateGrid()
     {
-        grid = new Node[width, height];
+        Vector3 startPosition = transform.position;
 
-        for (int x = 0; x < width; x++)
+        nodes = new Node[gridSizeX, gridSizeY];
+
+        for (int x = 0; x < gridSizeX; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < gridSizeY; y++)
             {
-                Vector3 worldPoint = new Vector3(x * cellSize, 0, y * cellSize);
-                float elevation = GetHeightAtPosition(x, y);
-                bool walkable = elevation != 0;
+                Vector3 nodePosition = startPosition + new Vector3(x * nodeDistance, 0, y * nodeDistance);
+                Node newNode = new Node(nodePosition);
 
-                worldPoint.y = elevation; // Adjust the Y position based on elevation
+                if (IsWalkableArea(nodePosition, out float elevation))
+                {
+                    newNode.elevation = elevation;
+                    newNode.position = new Vector3(nodePosition.x, elevation, nodePosition.z);
+                    newNode.isWalkable = true;
 
-                grid[x, y] = new Node(walkable, worldPoint, x, y, elevation);
+                    // Check if there is a walkable area under the current node
+                    // If there is, create a new node with the same position but with the elevation of the walkable area
+                    // Concatenate the new node to the nodes array
+                    // if (IsWalkableArea(newNode.position, out float elevation2))
+                    // {
+                    //     Node extraNode = new Node(newNode.position)
+                    //     {
+                    //         elevation = elevation2,
+                    //         position = new Vector3(newNode.position.x, elevation2, newNode.position.z),
+                    //         isWalkable = true
+                    //     };
+
+                    //     // Concatenate the extraNode to the nodes array
+                    //     Node[,] newNodes = new Node[gridSizeX + 1, gridSizeY + 1];
+                    //     for (int i = 0; i < gridSizeX; i++)
+                    //     {
+                    //         for (int j = 0; j < gridSizeY; j++)
+                    //         {
+                    //             newNodes[i, j] = nodes[i, j];
+                    //         }
+                    //     }
+                    //     newNodes[gridSizeX, gridSizeY] = extraNode;
+                    //     nodes = newNodes;
+                    // }
+                }
+                else
+                {
+                    newNode.isWalkable = false;
+                }
+
+                nodes[x, y] = newNode;
             }
         }
 
-        Setgrid(grid);
+        ConnectNodes();
     }
 
-    public void Setgrid(Node[,] grid)
+    private bool IsWalkableArea(Vector3 position, out float elevation)
     {
-        this.grid = grid;
-    }
-
-    private float GetHeightAtPosition(int x, int y)
-    {
-        Vector3 gridPos = new Vector3(x * cellSize, 0, y * cellSize);
-
+        // Create a ray from above the position downward
+        Ray ray = new Ray(position + Vector3.up * maxElevationDetection, Vector3.down);
         RaycastHit hit;
-        if (Physics.Raycast(gridPos + Vector3.up * 100f, Vector3.down, out hit, Mathf.Infinity, walkableSurfaceLayer))
+
+        // Set the maximum distance for the raycast
+        float maxRaycastDistance = 200f;
+
+        if (Physics.Raycast(ray, out hit, maxRaycastDistance, obstacleLayerMask))
         {
-            return hit.point.y;
+            elevation = 0f;
+            return false; // If an obstacle is hit
         }
-        return 0f; // Default elevation if no collision found (adjust as needed)
+
+        // Perform the raycast
+        if (Physics.Raycast(ray, out hit, maxRaycastDistance, walkableLayerMask))
+        {
+            elevation = hit.point.y;
+            return true; // If walkable terrain is hit
+        }
+
+        elevation = 0f;
+        return false; // If no walkable terrain is found
     }
 
-    public class Node
+    private void ConnectNodes()
     {
-        public bool walkable;
-        public Vector3 worldPosition;
-        public int gridX;
-        public int gridY;
-        public float elevation;
-
-        public Node(bool walkable, Vector3 worldPosition, int gridX, int gridY, float elevation)
+        foreach (int x in Enumerable.Range(0, gridSizeX))
         {
-            this.walkable = walkable;
-            this.worldPosition = worldPosition;
-            this.gridX = gridX;
-            this.gridY = gridY;
-            this.elevation = elevation;
-        }
-    }
-
-    public void DrawGrid()
-    {
-        if (Grid != null) 
-        {
-            for (int x = 0; x < width; x++) 
+            foreach (int y in Enumerable.Range(0, gridSizeY))
             {
-                for (int y = 0; y < height; y++) 
+                CheckNodeConnections(x, y);
+            }
+        }
+    }
+
+    private void CheckNodeConnections(int x, int y)
+    {
+        Node currentNode = nodes[x, y];
+
+        foreach (int i in Enumerable.Range(x - 1, 3))
+        {
+            foreach (int j in Enumerable.Range(y - 1, 3))
+            {
+                if (i == x && j == y || i < 0 || i >= gridSizeX || j < 0 || j >= gridSizeY)
+                    continue;
+
+                Node otherNode = nodes[i, j];
+
+                if (otherNode == null)
+                    continue;
+
+                currentNode.AddConnectedNode(otherNode);
+            }
+        }
+    }
+
+    public void ClearGrid()
+    {
+        nodes = null;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (nodes != null)
+        {
+            foreach (Node node in nodes)
+            {
+                if (!node.isWalkable)
+                    continue;
+                
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(node.position, 0.1f);
+            
+                Gizmos.color = Color.green;
+                foreach (Node connectedNode in node.connectedNodes)
                 {
-                    if (!Grid[x, y].walkable)
+                    if (!connectedNode.isWalkable)
                         continue;
-                        
-                    Gizmos.color = grid[x, y].walkable ? Color.blue : Color.red;
-
-                    Vector3 nodePos = grid[x, y].worldPosition;
-                    Vector3 rightPos = nodePos + new Vector3(cellSize, 0, 0);
-                    Vector3 upPos = nodePos + new Vector3(0, 0, cellSize);
-
-                    if (x < width - 1)
-                    {
-                        Gizmos.DrawLine(nodePos, grid[x + 1, y].worldPosition);
-                    }
-                    if (y < height - 1)
-                    {
-                        Gizmos.DrawLine(nodePos, grid[x, y + 1].worldPosition);
-                    }
-
-                    Gizmos.DrawLine(nodePos, rightPos);
-                    Gizmos.DrawLine(nodePos, upPos);
+                    
+                    Gizmos.DrawLine(node.position, connectedNode.position);
                 }
             }
         }
-    }
-
-    private void OnDrawGizmos() 
-    {
-        DrawGrid();
     }
 }
