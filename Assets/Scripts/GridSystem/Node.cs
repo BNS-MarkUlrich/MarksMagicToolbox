@@ -10,6 +10,15 @@ public class Node
     public float maxElevationDifference;
     public float maxConnectionDistance;
     public bool isWalkable; // Represents if the node is walkable or not
+    public Vector2Int gridPosition; // Position of the node in the grid
+
+    // Variables for A* algorithm
+    public Node parent; // Parent node for A* algorithm
+
+    // Cost variables for A* algorithm
+    public int gCost; // Cost from starting node to this node
+    public int hCost; // Heuristic cost from this node to the target node
+    public int FCost { get { return gCost + hCost; } } // Total cost (fCost)
 
     public Node(Vector3 pos)
     {
