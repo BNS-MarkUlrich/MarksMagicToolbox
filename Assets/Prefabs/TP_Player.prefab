@@ -548,7 +548,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9218311668864662616}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb316620eb18cca449a15eabe2881ccb, type: 3}
   m_Name: 
@@ -569,7 +569,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 200
-  rotationSpeed: 5
+  rotationSpeed: 10
+  myCamera: {fileID: 5328742617184562110}
   currentSpeed: 0
   maxReverseSpeed: -150
   rotationVelocity: {x: 0, y: 0}

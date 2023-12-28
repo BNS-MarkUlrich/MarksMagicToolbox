@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class TPMovement : Movement
 {
+    [Header("Components")]
+    [SerializeField] protected Camera myCamera;
+
     [Header("Speed")]
     [SerializeField] protected float currentSpeed;
     [SerializeField] protected float maxReverseSpeed;
@@ -35,7 +38,6 @@ public class TPMovement : Movement
     protected override void Awake()
     {
         base.Awake();
-        //maxReverseSpeed = -maxSpeed / Mass;
         maxRotationVelocity = maxSpeed / Mass;
     }
 
@@ -74,7 +76,11 @@ public class TPMovement : Movement
 
         currentSpeed = Mathf.Clamp(currentSpeed, maxReverseSpeed, maxSpeed);
 
-        MyRigidBody.velocity = transform.forward.normalized * (currentSpeed * Time.deltaTime);
+        var relativeDirection = myCamera.transform.forward.normalized;
+        relativeDirection.y = 0;
+        MyRigidBody.velocity = relativeDirection * (currentSpeed * Time.deltaTime);
+        //MyRigidBody.velocity = Vector3.ClampMagnitude(MyRigidBody.velocity, maxSpeed);
+        MyRigidBody.MoveRotation(Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(MyRigidBody.velocity), Time.deltaTime * rotationSpeed));
     }
 
     public void ApplyLateralThrust(Vector2 thrustVelocity, bool ignorePitch)
@@ -96,6 +102,11 @@ public class TPMovement : Movement
             turningThrust = GetThrust(thrustVelocity, maxTurningThrust);
             rotationVelocity = GetAngularVelocity(turningThrust, maxTurningThrust, maxRotationVelocity);
         }
+
+        // var relativeDirection = myCamera.transform.forward.normalized;
+        // relativeDirection.y = 0;
+        // MyRigidBody.velocity = relativeDirection * (currentSpeed * Time.deltaTime);
+        // MyRigidBody.MoveRotation(Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(MyRigidBody.velocity), Time.deltaTime * rotationSpeed));
 
         transform.Rotate(Vector3.up * rotationVelocity.x / Mass);
         transform.Rotate(Vector3.right * -rotationVelocity.y / Mass);
