@@ -15,13 +15,10 @@ public class GridSystem : MonoBehaviour
 
     [SerializeField] private bool showGrid = true;
 
-    private List<GridSystem> mergedGrids = new List<GridSystem>();
-
     private void Start() 
     {
         CreateGrid();
-        MergeAllGrids();
-        //ConnectGrids();
+        ConnectGrids();
     }
 
     public void CreateGrid()
@@ -83,28 +80,6 @@ public class GridSystem : MonoBehaviour
         return false; // If no walkable terrain is found
     }
 
-    public void MergeAllGrids()
-    {
-        if (connectedGrids == null)
-            return;
-
-        foreach (GridSystem otherGrid in connectedGrids)
-        {
-            if (otherGrid.nodes == null)
-                continue;
-
-            if (mergedGrids.Contains(otherGrid))
-                continue;
-
-            nodes = MergeGrids(otherGrid);
-
-            gridSizeX = nodes.Length / gridSizeY;
-            gridSizeY = nodes.Length / gridSizeX;
-        }
-
-        ConnectGrids();
-    }
-
     private void ConnectNodes()
     {
         foreach (int x in Enumerable.Range(0, gridSizeX))
@@ -148,7 +123,6 @@ public class GridSystem : MonoBehaviour
     public void ClearGrid()
     {
         nodes = null;
-        mergedGrids.Clear();
     }
 
     public void ConnectGrids()
@@ -165,6 +139,33 @@ public class GridSystem : MonoBehaviour
                 continue;
 
             ConnectNodesBetweenGrids(otherGrid);
+        }
+    }
+
+    public void DisconnectGrids()
+    {
+        foreach (GridSystem otherGrid in connectedGrids)
+        {
+            DisconnectNodesBetweenGrids(otherGrid);
+        }
+    }
+
+    private void DisconnectNodesBetweenGrids(GridSystem otherGrid)
+    {
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                Node currentNode = nodes[x, y];
+
+                foreach (Node otherNode in otherGrid.nodes)
+                {
+                    if (otherNode == null)
+                        continue;
+
+                    currentNode.connectedNodes.Remove(otherNode);
+                }
+            }
         }
     }
 
@@ -191,7 +192,7 @@ public class GridSystem : MonoBehaviour
             if (otherNode.isWalkable)
             {
                 currentNode.AddConnectedNode(otherNode);
-            } 
+            }
         }
     }
 
@@ -208,9 +209,6 @@ public class GridSystem : MonoBehaviour
         {
             foreach (Node node in nodes)
             {
-                if (node == null)
-                    continue;
-
                 if (!node.isWalkable)
                     continue;
                 
@@ -319,33 +317,15 @@ public class GridSystem : MonoBehaviour
         int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
         int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
 
-        return nodes[x, y];
-    }
+        Node currentNode = nodes[x, y];
 
-    private Node[,] MergeGrids(GridSystem otherGrid)
-    {
-        // Merge arrays using LINQ
-        var mergedArray = Enumerable.Range(0, gridSizeX)
-            .SelectMany(row => Enumerable.Range(0, gridSizeY)
-                .Select(col => new { Row = row, Col = col }))
-            .Select(index =>
-            {
-                int row = index.Row;
-                int col = index.Col;
+        // If there are multiple elevations, find the closest one to the provided world position
+        // if (currentNode.elevations.Count > 1)
+        // {
+        //     float closestElevation = currentNode.elevations.OrderBy(e => Mathf.Abs(e - worldPosition.y)).First();
+        //     currentNode.position.y = closestElevation;
+        // }
 
-                return row < gridSizeX ? nodes[row, col] : otherGrid.nodes[row - gridSizeX, col];
-            })
-            .ToArray();
-
-        // Reshape the merged sequence into a new 2D array
-        Node[,] finalArray = new Node[gridSizeX + otherGrid.nodes.GetLength(0), gridSizeY];
-        for (int i = 0; i < mergedArray.Length; i++)
-        {
-            finalArray[i / gridSizeY, i % gridSizeY] = mergedArray[i];
-        }
-
-        mergedGrids.Add(otherGrid);
-
-        return finalArray;
+        return currentNode;
     }
 }

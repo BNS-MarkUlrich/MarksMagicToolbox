@@ -16,7 +16,6 @@ public class GridEditor : Editor
         }
 
         //grid.ConnectGrids();
-        grid.MergeAllGrids();
 
         if (GUILayout.Button("Clear Grid"))
         {
