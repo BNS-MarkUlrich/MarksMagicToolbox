@@ -14,15 +14,17 @@ public abstract class BaseWeapon : MonoBehaviour
     protected Collider attackCollider;
     protected bool isAttacking;
     protected bool isBlocked;
-    protected bool isFinishedSwinging;
+    protected bool isFinishedSwinging = true;
     protected float currentAttackAngle;
     protected Quaternion originalRotation;
+    protected Rigidbody myRigidbody;
 
     public float Damage => damage;
     public float WeaponLength => weaponLength;
     public float WeaponSpeed => weaponSpeed;
     public bool IsAttacking => isAttacking;
     public bool IsBlocked => isBlocked;
+    public Rigidbody MyRigidbody => myRigidbody;
 
     public Agent OwningAgent { get; set; }
 
@@ -31,6 +33,7 @@ public abstract class BaseWeapon : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        myRigidbody = GetComponent<Rigidbody>();
         attackCollider = GetComponent<Collider>();
         attackCollider.enabled = false;
         blockingCollider.enabled = false;
@@ -57,7 +60,19 @@ public abstract class BaseWeapon : MonoBehaviour
 
         // Side note: use sprint joints on opponents to make them react to hits
 
-        print("Hit " + other.name);
+        if (!isAttacking)
+            return;
+
+        if (other == blockingCollider)
+        {
+            TriggerHitEvent(
+                HitEventTypes.Blocked,
+                null,
+                attackCollider.ClosestPoint(other.transform.position)
+            );
+
+            return;
+        }
 
         if(other.TryGetComponent(out Agent opponent))
         {
@@ -66,16 +81,16 @@ public abstract class BaseWeapon : MonoBehaviour
             TriggerHitEvent(
                 HitEventTypes.Hit,
                 opponent, 
-                other.ClosestPoint(transform.position)
+                attackCollider.ClosestPoint(other.transform.position)
             );
 
             return;
         }
 
         TriggerHitEvent(
-            HitEventTypes.Blocked, 
-            null, 
-            other.ClosestPoint(transform.position)
+            HitEventTypes.Missed,
+            null,
+            attackCollider.ClosestPoint(other.transform.position)
         );
     }
 
@@ -98,7 +113,7 @@ public abstract class BaseWeapon : MonoBehaviour
     {
         if (isAttacking) 
             return;
-        
+
         isAttacking = true;
         attackCollider.enabled = true;
         blockingCollider.enabled = false;
@@ -106,14 +121,26 @@ public abstract class BaseWeapon : MonoBehaviour
         // TODO: Add animation here
         originalRotation = transform.rotation;
     }
-
+    
     public void Block()
     {
         if (isAttacking) 
             return;
         
         attackCollider.enabled = false;
+
+        // Logic here needs to be changed to check for angle of incoming attack, to prevent people moving their weapon through the collider
         blockingCollider.enabled = true;
+    }
+
+    public void SetAttackDirection(Vector2 direction)
+    {
+        if (isAttacking || !isFinishedSwinging)
+            return;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, 0f, angle), (WeaponSpeed / MyRigidbody.mass / 10f) * Time.deltaTime);
+        //myWeapon.transform.rotation = Quaternion.Euler(0f, 0f, MathF.Round(angle / 45f) * 45f);
     }
 
     public void SetBlockDirection(Vector2 direction)
@@ -123,6 +150,7 @@ public abstract class BaseWeapon : MonoBehaviour
 
     protected void Swing()
     {
+        isFinishedSwinging = false;
         float angleStep = weaponSpeed * Time.deltaTime;
 
         if (currentAttackAngle < finishAttackAngle)
@@ -134,7 +162,6 @@ public abstract class BaseWeapon : MonoBehaviour
 
         attackCollider.enabled = false;
         blockingCollider.enabled = false;
-        isFinishedSwinging = true;
         currentAttackAngle = 0f;
         isBlocked = true;
 
@@ -152,15 +179,15 @@ public abstract class BaseWeapon : MonoBehaviour
         }
 
         isBlocked = false;
+        isFinishedSwinging = true;
     }
 
     protected void StopSwing(HitEvent hitEvent)
     {
-        if (hitEvent.type == HitEventTypes.Blocked)
+        if (hitEvent.type == HitEventTypes.Blocked || hitEvent.type == HitEventTypes.Missed)
         {
             attackCollider.enabled = false;
             blockingCollider.enabled = false;
-            isFinishedSwinging = true;
             currentAttackAngle = 0f;
 
             isAttacking = false;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MeleeSystem : MonoBehaviour
@@ -22,9 +23,6 @@ public class MeleeSystem : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Mouse0) && !myWeapon.IsAttacking)
         {
-            // lock mouse
-            
-
             if (!Input.GetKey(KeyCode.Mouse1))
                 ChooseDirection();
             
@@ -32,7 +30,7 @@ public class MeleeSystem : MonoBehaviour
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
-                myWeapon.Attack();
+            myWeapon.Attack();
     }
 
     private void ChooseDirection()
@@ -49,7 +47,9 @@ public class MeleeSystem : MonoBehaviour
         else if (Mathf.Abs(mouseDirection.y) > Mathf.Abs(mouseDirection.x))
             attackDirection.Set(0f, mouseDirection.y);
 
-        SetSwordRotation();
+        attackDirection.Normalize();
+
+        myWeapon.SetAttackDirection(attackDirection);        
         myWeapon.SetBlockDirection(attackDirection);
     }
 
@@ -58,16 +58,14 @@ public class MeleeSystem : MonoBehaviour
         attackDirection = direction;
     }
 
-    // set sword rotation to attack direction, using the player position as pivot
-    // use a lerp to smooth the rotatio
-    private void SetSwordRotation()
-    {
-        float angle = Mathf.Atan2(attackDirection.y, attackDirection.x) * Mathf.Rad2Deg;
-        myWeapon.transform.rotation = Quaternion.Lerp(myWeapon.transform.rotation, Quaternion.Euler(0f, 0f, angle), 0.5f);
-    }
-
     private void OnHit(HitEvent hitEvent)
     {
+        if (hitEvent.type == HitEventTypes.Missed)
+        {
+            print($"{hitEvent.aggressor.name}'s attack missed and hit the ground at {hitEvent.hitPoint}");
+            return;
+        }
+
         if (hitEvent.type == HitEventTypes.Blocked)
         {
             print($"{hitEvent.aggressor.name}'s attack was blocked");
