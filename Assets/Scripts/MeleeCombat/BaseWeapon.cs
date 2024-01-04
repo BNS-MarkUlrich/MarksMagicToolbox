@@ -6,31 +6,46 @@ public abstract class BaseWeapon : MonoBehaviour
 {
     [SerializeField] protected float damage = 10f;
     [SerializeField] protected float weaponLength = 1f;
-    [SerializeField] protected float weaponSpeed = 1f;
-    [SerializeField] protected float attackCooldown = 0.5f;
+    [SerializeField] protected float weaponSpeed = 150f;
+    [SerializeField] protected float finishAttackAngle = 120f;
+    [SerializeField] protected float attackCooldown = 0.1f;
+    [SerializeField] protected Collider blockingCollider;
     
-    protected bool isAttacking;
     protected Collider attackCollider;
-    protected Collider blockingCollider;
+    protected bool isAttacking;
+    protected bool isBlocked;
+    protected bool isFinishedSwinging;
+    protected float currentAttackAngle;
+    protected Quaternion originalRotation;
 
     public float Damage => damage;
     public float WeaponLength => weaponLength;
     public float WeaponSpeed => weaponSpeed;
+    public bool IsAttacking => isAttacking;
+    public bool IsBlocked => isBlocked;
 
     public Agent OwningAgent { get; set; }
 
     public Action<HitEvent> OnHit;
+    public Action OnAttack;
 
     protected virtual void OnEnable()
     {
+        attackCollider = GetComponent<Collider>();
         attackCollider.enabled = false;
         blockingCollider.enabled = false;
+
+        OnAttack += Attack;
+        OnHit += StopSwing;
     }
 
-    protected virtual void Awake()
+    private void FixedUpdate() 
     {
-        attackCollider = GetComponent<Collider>();
-        blockingCollider = GetComponentInChildren<Collider>();
+        if (isAttacking)
+            Swing();
+        
+        if (isBlocked)
+            ResetSwing();
     }
 
     protected void OnTriggerEnter(Collider other)
@@ -42,6 +57,8 @@ public abstract class BaseWeapon : MonoBehaviour
 
         // Side note: use sprint joints on opponents to make them react to hits
 
+        print("Hit " + other.name);
+
         if(other.TryGetComponent(out Agent opponent))
         {
             if (opponent.AgentId == OwningAgent.AgentId) return;
@@ -51,6 +68,8 @@ public abstract class BaseWeapon : MonoBehaviour
                 opponent, 
                 other.ClosestPoint(transform.position)
             );
+
+            return;
         }
 
         TriggerHitEvent(
@@ -80,10 +99,12 @@ public abstract class BaseWeapon : MonoBehaviour
         if (isAttacking) 
             return;
         
+        isAttacking = true;
         attackCollider.enabled = true;
         blockingCollider.enabled = false;
-        
-        StartCoroutine(AttackCooldown());
+
+        // TODO: Add animation here
+        originalRotation = transform.rotation;
     }
 
     public void Block()
@@ -95,10 +116,56 @@ public abstract class BaseWeapon : MonoBehaviour
         blockingCollider.enabled = true;
     }
 
-    protected IEnumerator AttackCooldown()
+    public void SetBlockDirection(Vector2 direction)
     {
-        isAttacking = true;
-        yield return new WaitForSeconds(attackCooldown);
+        blockingCollider.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+    }
+
+    protected void Swing()
+    {
+        float angleStep = weaponSpeed * Time.deltaTime;
+
+        if (currentAttackAngle < finishAttackAngle)
+        {
+            currentAttackAngle += angleStep;
+            transform.Rotate(-Vector3.up * angleStep);
+            return;
+        }
+
+        attackCollider.enabled = false;
+        blockingCollider.enabled = false;
+        isFinishedSwinging = true;
+        currentAttackAngle = 0f;
+        isBlocked = true;
+
         isAttacking = false;
+    }
+
+    protected void ResetSwing()
+    {
+        float angleStep = weaponSpeed * 2 * Time.deltaTime;
+
+        if (transform.rotation != originalRotation)
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, originalRotation, angleStep);
+            return;
+        }
+
+        isBlocked = false;
+    }
+
+    protected void StopSwing(HitEvent hitEvent)
+    {
+        if (hitEvent.type == HitEventTypes.Blocked)
+        {
+            attackCollider.enabled = false;
+            blockingCollider.enabled = false;
+            isFinishedSwinging = true;
+            currentAttackAngle = 0f;
+
+            isAttacking = false;
+
+            isBlocked = true;
+        }
     }
 }

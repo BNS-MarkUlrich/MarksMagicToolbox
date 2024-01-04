@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MeleeSystem : MonoBehaviour
@@ -15,22 +13,26 @@ public class MeleeSystem : MonoBehaviour
 
     private void Start() 
     {
+        myWeapon = GetComponentInChildren<BaseWeapon>();
         myWeapon.OwningAgent = OwningAgent; // Change to pickup event later
         myWeapon.OnHit += OnHit;
     }
 
     private void Update() 
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0) && !myWeapon.IsAttacking)
         {
+            // lock mouse
+            
+
             if (!Input.GetKey(KeyCode.Mouse1))
                 ChooseDirection();
             
             myWeapon.Block();
-
-            if (Input.GetKeyUp(KeyCode.Mouse0))
-                myWeapon.Attack();
         }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+                myWeapon.Attack();
     }
 
     private void ChooseDirection()
@@ -48,6 +50,7 @@ public class MeleeSystem : MonoBehaviour
             attackDirection.Set(0f, mouseDirection.y);
 
         SetSwordRotation();
+        myWeapon.SetBlockDirection(attackDirection);
     }
 
     public void SetAttackDirection(Vector2 direction)
@@ -67,14 +70,14 @@ public class MeleeSystem : MonoBehaviour
     {
         if (hitEvent.type == HitEventTypes.Blocked)
         {
-            print($"{hitEvent.aggressor.name}'s attack was blocked by {hitEvent.opponent.name}");
+            print($"{hitEvent.aggressor.name}'s attack was blocked");
             return;
         }
 
-        hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);
+        hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);        
         hitEvent.opponent.MyRigidbody.AddForce
         (
-            hitEvent.attackDirection * hitEvent.weaponUsed.WeaponSpeed, 
+            -hitEvent.attackDirection, 
             ForceMode.Impulse
         );
 
