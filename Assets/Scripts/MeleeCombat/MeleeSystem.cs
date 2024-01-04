@@ -4,37 +4,50 @@ using UnityEngine;
 
 public class MeleeSystem : MonoBehaviour
 {
-    [SerializeField] private Sword sword;
+    [SerializeField] private BaseWeapon myWeapon;
     [SerializeField] private float blockingAngle = 45f;
 
     private Vector2 attackDirection;
     private Vector2 mouseDirection;
-    private HashSet<HealthData> enemiesHit = new();
+
+    public Agent OwningAgent { get; set; }
+    public Vector2 AttackDirection => attackDirection;
+
+    private void Start() 
+    {
+        myWeapon.OwningAgent = OwningAgent; // Change to pickup event later
+        myWeapon.OnHit += OnHit;
+    }
 
     private void Update() 
     {
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
+            if (!Input.GetKey(KeyCode.Mouse1))
+                ChooseDirection();
+            
+            myWeapon.Block();
 
-            mouseDirection.Set(mouseX, mouseY);
-            mouseDirection.Normalize();
-
-            // snap attack directon to 4 cardinal directions
-            if (Mathf.Abs(mouseDirection.x) > Mathf.Abs(mouseDirection.y))
-                attackDirection.Set(mouseDirection.x, 0f);
-            else if (Mathf.Abs(mouseDirection.y) > Mathf.Abs(mouseDirection.x))
-                attackDirection.Set(0f, mouseDirection.y);
-
-            SetSwordRotation();
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+                myWeapon.Attack();
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void ChooseDirection()
     {
-        if (other.TryGetComponent(out HealthData healthData) && !enemiesHit.Contains(healthData))
-            enemiesHit.Add(healthData);
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+
+        mouseDirection.Set(mouseX, mouseY);
+        mouseDirection.Normalize();
+
+        // snap attack directon to 4 cardinal directions
+        if (Mathf.Abs(mouseDirection.x) > Mathf.Abs(mouseDirection.y))
+            attackDirection.Set(mouseDirection.x, 0f);
+        else if (Mathf.Abs(mouseDirection.y) > Mathf.Abs(mouseDirection.x))
+            attackDirection.Set(0f, mouseDirection.y);
+
+        SetSwordRotation();
     }
 
     public void SetAttackDirection(Vector2 direction)
@@ -47,7 +60,25 @@ public class MeleeSystem : MonoBehaviour
     private void SetSwordRotation()
     {
         float angle = Mathf.Atan2(attackDirection.y, attackDirection.x) * Mathf.Rad2Deg;
-        sword.transform.rotation = Quaternion.Lerp(sword.transform.rotation, Quaternion.Euler(0f, 0f, angle), 0.5f);
+        myWeapon.transform.rotation = Quaternion.Lerp(myWeapon.transform.rotation, Quaternion.Euler(0f, 0f, angle), 0.5f);
+    }
+
+    private void OnHit(HitEvent hitEvent)
+    {
+        if (hitEvent.type == HitEventTypes.Blocked)
+        {
+            print($"{hitEvent.aggressor.name}'s attack was blocked by {hitEvent.opponent.name}");
+            return;
+        }
+
+        hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);
+        hitEvent.opponent.MyRigidbody.AddForce
+        (
+            hitEvent.attackDirection * hitEvent.weaponUsed.WeaponSpeed, 
+            ForceMode.Impulse
+        );
+
+        print($"{hitEvent.opponent.name} took {hitEvent.weaponUsed.Damage} damage from {hitEvent.aggressor.name}'s {hitEvent.weaponUsed.name}");
     }
 
     private void OnDrawGizmos() 
