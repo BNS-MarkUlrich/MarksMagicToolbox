@@ -178,7 +178,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myWeapon: {fileID: 0}
-  blockingAngle: 45
 --- !u!54 &4260083974250739569
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -227,19 +226,11 @@ PrefabInstance:
       value: 0.663
       objectReference: {fileID: 0}
     - target: {fileID: 4580852523281391545, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4580852523281391545, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4580852523281391545, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4580852523281391545, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
-      propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4580852523281391545, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}

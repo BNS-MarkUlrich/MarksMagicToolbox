@@ -6,6 +6,5 @@ public class HitEvent : MonoBehaviour
     public Agent aggressor;
     public Agent opponent;
     public BaseWeapon weaponUsed;
-    public Vector3 hitPoint;
     public Vector2 attackDirection;
 }

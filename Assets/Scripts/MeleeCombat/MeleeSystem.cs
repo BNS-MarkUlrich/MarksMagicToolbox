@@ -4,7 +4,6 @@ using UnityEngine;
 public class MeleeSystem : MonoBehaviour
 {
     [SerializeField] private BaseWeapon myWeapon;
-    [SerializeField] private float blockingAngle = 45f;
 
     private Vector2 attackDirection;
     private Vector2 mouseDirection;
@@ -62,7 +61,7 @@ public class MeleeSystem : MonoBehaviour
     {
         if (hitEvent.type == HitEventTypes.Missed)
         {
-            print($"{hitEvent.aggressor.name}'s attack missed and hit the ground at {hitEvent.hitPoint}");
+            print($"{hitEvent.aggressor.name}'s attack missed");
             return;
         }
 
@@ -89,11 +88,5 @@ public class MeleeSystem : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, mouseDirection * 2f);
-        
-        Vector2 attackAngleVector = Quaternion.Euler(0f, 0f, blockingAngle) * attackDirection;
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawRay(transform.position, attackAngleVector * 2f);
-        attackAngleVector = Quaternion.Euler(0f, 0f, -blockingAngle) * attackDirection;
-        Gizmos.DrawRay(transform.position, attackAngleVector * 2f);
     }
 }
