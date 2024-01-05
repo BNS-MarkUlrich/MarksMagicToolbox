@@ -61,13 +61,13 @@ public class MeleeSystem : MonoBehaviour
     {
         if (hitEvent.type == HitEventType.Missed)
         {
-            print($"{hitEvent.aggressor.name}'s attack missed");
+            print($"{hitEvent.aggressor.name}'s attack missed"); // at {hitEvent.hitPoint}");
             return;
         }
 
         if (hitEvent.type == HitEventType.Blocked)
         {
-            print($"{hitEvent.aggressor.name}'s attack was blocked");
+            print($"{hitEvent.aggressor.name}'s attack was blocked by {hitEvent.opponent.name} at {hitEvent.hitPoint} with {hitEvent.weaponUsed.name}");
             return;
         }
 

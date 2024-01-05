@@ -139,6 +139,7 @@ MonoBehaviour:
     weaponLength: 1.19
     weaponSpeed: 93
     weaponWeight: 3
+    hiltPoint: 3
   blockingAngle: 45
   finishAttackAngle: 160
   attackCooldown: 0.1

@@ -9,10 +9,12 @@ public struct WeaponAttributes
     [SerializeField] private float weaponLength;
     [SerializeField] private float weaponSpeed;
     [SerializeField] private float weaponWeight;
+    [SerializeField] private float hiltPoint;
 
-    public WeaponType WeaponType => weaponType;
-    public SerializableDictionary<DamageType, float> DamageTypes => damageTypes;
-    public float WeaponLength => weaponLength;
-    public float WeaponSpeed => weaponSpeed;
-    public float WeaponWeight => weaponWeight;
+    public readonly WeaponType WeaponType => weaponType;
+    public readonly SerializableDictionary<DamageType, float> DamageTypes => damageTypes;
+    public readonly float WeaponLength => weaponLength;
+    public readonly float WeaponSpeed => weaponSpeed;
+    public readonly float WeaponWeight => weaponWeight;
+    public readonly float HiltPoint => hiltPoint;
 }

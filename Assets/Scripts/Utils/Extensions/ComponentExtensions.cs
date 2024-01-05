@@ -20,7 +20,7 @@ public static class ComponentExtensions
         {
             cachedSet.Add(targetComponent, component);
             cachedComponent = component;
-            return false;
+            return true;
         }
 
         cachedComponent = default;
