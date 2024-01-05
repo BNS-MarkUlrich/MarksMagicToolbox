@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class HitEvent : MonoBehaviour
+public class HitEvent : EventArgs
 {
     public HitEventType type;
     public Agent aggressor;

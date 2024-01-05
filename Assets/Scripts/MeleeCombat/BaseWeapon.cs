@@ -26,8 +26,10 @@ public abstract class BaseWeapon : MonoBehaviour
     public float Damage => WeaponAttributes.DamageTypes[DamageType.Cut]; // TODO: Add damage type selection
     public float WeaponLength => WeaponAttributes.WeaponLength;
     public Vector3 TopPoint => BottomPoint + transform.up * WeaponLength;
-    public Vector3 MiddlePoint => transform.position + transform.up * (WeaponLength / 5);
+    public Vector3 MiddlePoint => transform.position + transform.up * BumpRange;
     public Vector3 BottomPoint => transform.position + transform.up - transform.up;
+    public float HitRange => WeaponLength - BumpRange;
+    public float BumpRange => WeaponLength / 5;  
     public float SwingSpeed => WeaponAttributes.WeaponSpeed / WeaponAttributes.WeaponLength / WeaponAttributes.WeaponWeight;
     public bool IsAttacking => isAttacking;
     public bool IsBlocked => isBlocked;
@@ -118,45 +120,36 @@ public abstract class BaseWeapon : MonoBehaviour
             currentAttackAngle += angleStep;
             transform.Rotate(-Vector3.left * angleStep);
             
-            // detect if there is a gameobject between the top, middle, and bottom points of the weapon
-            RaycastHit hit;
-            if (Physics.Raycast(BottomPoint, MiddlePoint - BottomPoint, out hit, WeaponLength / 5))
-            {
-                TriggerHitEvent(HitEventType.Blocked, null, hit.point);
-                return;
-            }
-
-            if (Physics.Raycast(MiddlePoint, TopPoint - MiddlePoint, out hit, WeaponLength / (WeaponLength / 5)))
-            {
-                if (hit.collider.gameObject != OwningAgent.gameObject)
-                {
-                    if (hitAgents.ContainsKey(hit.collider) && !agentsHit.Contains(hitAgents[hit.collider]))
-                    {
-                        agentsHit.Add(hitAgents[hit.collider]);
-                        TriggerHitEvent(HitEventType.Hit, hitAgents[hit.collider], hit.point);
-                        return;
-                    }
-
-                    if (hit.collider.TryGetComponent(out Agent agent))
-                    {
-                        if (agentsHit.Contains(agent))
-                            return;
-                        
-                        hitAgents.Add(hit.collider, agent);
-                        agentsHit.Add(agent);
-                        TriggerHitEvent(HitEventType.Hit, agent, hit.point);
-                        return;
-                    }
-                }
-
-                TriggerHitEvent(HitEventType.Missed, null, hit.point);
-            }
+            CheckSwingCollisions();
             return;
         }
 
         currentAttackAngle = 0f;
         isAttacking = false;
         isBlocked = true;
+    }
+
+    protected void CheckSwingCollisions()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(BottomPoint, MiddlePoint - BottomPoint, out hit, BumpRange))
+        {
+            TriggerHitEvent(HitEventType.Bumped, null, hit.point);
+            return;
+        }
+
+        if (Physics.Raycast(MiddlePoint, TopPoint - MiddlePoint, out hit, HitRange))
+        {
+            if (hit.collider.gameObject != OwningAgent.gameObject)
+            {
+                if (hit.collider.TryGetCachedComponent(ref hitAgents, out Agent agent))
+                {
+                    TriggerHitEvent(HitEventType.Hit, agent, hit.point);
+                    agentsHit.Add(agent);
+                }
+                return;
+            }
+        }
     }
 
     protected void ResetSwing()
@@ -175,7 +168,7 @@ public abstract class BaseWeapon : MonoBehaviour
 
     protected void StopSwing(HitEvent hitEvent)
     {
-        if (hitEvent.type == HitEventType.Blocked || hitEvent.type == HitEventType.Missed)
+        if (hitEvent.type is HitEventType.Blocked or HitEventType.Missed or HitEventType.Bumped)
         {
             currentAttackAngle = 0f;
             isAttacking = false;
@@ -187,7 +180,7 @@ public abstract class BaseWeapon : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(TopPoint, 0.1f);
-        Gizmos.DrawRay(TopPoint, -transform.up * (WeaponLength / 2));
+        Gizmos.DrawRay(TopPoint, -transform.up * HitRange);
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(MiddlePoint, 0.1f);
@@ -195,7 +188,7 @@ public abstract class BaseWeapon : MonoBehaviour
         
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(BottomPoint, 0.1f);
-        Gizmos.DrawRay(BottomPoint, transform.up * (WeaponLength / 2));
+        Gizmos.DrawRay(BottomPoint, transform.up * BumpRange);
         
         if (OwningAgent != null)
         {

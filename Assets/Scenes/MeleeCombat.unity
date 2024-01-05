@@ -562,22 +562,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.weaponType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.weaponSpeed
-      value: 93
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.weaponLength
-      value: 1.19
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.weaponWeight
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: exampleDictionary.keys.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -586,20 +570,12 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damage.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: exampleDictionary.values.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: exampleDictionary.keys.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damageTypes.Array.size
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: test.dictionaryEntries.Array.data[0].name
@@ -624,34 +600,6 @@ PrefabInstance:
     - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: test.dictionaryEntries.Array.data[3].Item1
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damage.Array.data[0].Item2
-      value: 36
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damage.Array.data[1].Item1
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damage.Array.data[1].Item2
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damageTypes.Array.data[0].Item2
-      value: 36
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damageTypes.Array.data[1].Item1
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damageTypes.Array.data[1].Item2
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 462971108480609607, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
-      propertyPath: weaponAttributes.damageTypes.dictionaryEntries.Array.size
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 774047923996345063, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_Layer
