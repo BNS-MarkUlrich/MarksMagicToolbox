@@ -1,4 +1,4 @@
-public enum HitEventTypes
+public enum HitEventType
 {
     Hit,
     Blocked,

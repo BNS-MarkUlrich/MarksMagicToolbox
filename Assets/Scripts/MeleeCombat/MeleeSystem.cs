@@ -59,34 +59,34 @@ public class MeleeSystem : MonoBehaviour
 
     private void OnHit(HitEvent hitEvent)
     {
-        if (hitEvent.type == HitEventTypes.Missed)
+        if (hitEvent.type == HitEventType.Missed)
         {
             print($"{hitEvent.aggressor.name}'s attack missed");
             return;
         }
 
-        if (hitEvent.type == HitEventTypes.Blocked)
+        if (hitEvent.type == HitEventType.Blocked)
         {
             print($"{hitEvent.aggressor.name}'s attack was blocked");
             return;
         }
 
-        hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);        
+        hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);
         hitEvent.opponent.MyRigidbody.AddForce
         (
             -hitEvent.attackDirection, 
             ForceMode.Impulse
         );
 
-        print($"{hitEvent.opponent.name} took {hitEvent.weaponUsed.Damage} damage from {hitEvent.aggressor.name}'s {hitEvent.weaponUsed.name}");
+        print($"{hitEvent.opponent.name} took {hitEvent.weaponUsed.Damage} {hitEvent.weaponUsed.TypeOfDamage} damage from {hitEvent.aggressor.name}'s {hitEvent.weaponUsed.name}");
     }
 
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, attackDirection * 2f);
+        Gizmos.DrawRay(transform.position, attackDirection);
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, mouseDirection * 2f);
+        Gizmos.DrawRay(transform.position, mouseDirection);
     }
 }

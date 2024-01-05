@@ -128,9 +128,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3371e16cc3c1e7489b9d58197241f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 30
+  weaponAttributes:
+    weaponType: 1
+    damageTypes:
+      dictionaryEntries:
+      - Item1: 0
+        Item2: 36
+      - Item1: 1
+        Item2: 20
+    weaponLength: 1.19
+    weaponSpeed: 93
+    weaponWeight: 3
   blockingAngle: 45
-  weaponLength: 2
-  weaponSpeed: 500
   finishAttackAngle: 160
   attackCooldown: 0.1
