@@ -13,6 +13,7 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected float attackCooldown = 0.1f;
 
     protected bool isAttacking;
+    protected bool canCancelAttack;
     protected bool hasHit;
     protected bool isBlocked;
     protected bool isFinishedSwinging = true;
@@ -119,6 +120,8 @@ public abstract class BaseWeapon : MonoBehaviour
         if (currentAttackAngle < finishAttackAngle)
         {
             currentAttackAngle += angleStep;
+            canCancelAttack = currentAttackAngle < finishAttackAngle / 2;
+
             transform.Rotate(-Vector3.left * angleStep);
             
             CheckSwingCollisions();
@@ -174,7 +177,7 @@ public abstract class BaseWeapon : MonoBehaviour
 
     protected void ResetSwing()
     {
-        float angleStep = SwingSpeed * 30 * Time.deltaTime;
+        float angleStep = SwingSpeed * 10 * Time.deltaTime;
 
         if (transform.rotation != originalRotation)
         {
@@ -189,12 +192,19 @@ public abstract class BaseWeapon : MonoBehaviour
 
     protected void StopSwing(HitEvent hitEvent)
     {
+        canCancelAttack = true;
         if (hitEvent.type is HitEventType.Blocked or HitEventType.Missed or HitEventType.Bumped)
-        {
-            currentAttackAngle = 0f;
-            isAttacking = false;
-            isBlocked = true;
-        }
+            CancelAttack();
+    }
+
+    public void CancelAttack()
+    {
+        if (!canCancelAttack)
+            return;
+        
+        currentAttackAngle = 0f;
+        isAttacking = false;
+        isBlocked = true;
     }
 
     private void OnDrawGizmos() 

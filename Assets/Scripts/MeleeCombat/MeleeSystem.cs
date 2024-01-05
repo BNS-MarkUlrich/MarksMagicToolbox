@@ -4,12 +4,12 @@ using UnityEngine;
 public class MeleeSystem : MonoBehaviour
 {
     [SerializeField] private BaseWeapon myWeapon;
+    [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> directionVectors;
 
     private Vector2 attackDirection;
     private Vector2 mouseDirection;
     private CardinalDirections currentDirection = CardinalDirections.Up;
 
-    [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> directionVectors;
 
     public Agent OwningAgent { get; set; }
     public Vector2 AttackDirection => attackDirection;
@@ -30,6 +30,7 @@ public class MeleeSystem : MonoBehaviour
                 ChooseDirection();
             
             myWeapon.Block();
+            myWeapon.CancelAttack();
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -54,23 +55,15 @@ public class MeleeSystem : MonoBehaviour
     private void SnapDirection(Vector2 direction)
     {
         if (direction.x > 0.5f)
-        {
             currentDirection = CardinalDirections.Right;
-        }
         else if (direction.x < -0.5f)
-        {
             currentDirection = CardinalDirections.Left;
-        }
         else if (direction.y > 0.5f)
-        {
             currentDirection = CardinalDirections.Up;
-        }
         else if (direction.y < -0.5f)
-        {
             currentDirection = CardinalDirections.Down;
-        }
         
-         directionVectors.TryGetValue(currentDirection, out attackDirection);
+        directionVectors.TryGetValue(currentDirection, out attackDirection);
         attackDirection.Normalize();
     }
 
