@@ -178,6 +178,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myWeapon: {fileID: 0}
+  directionVectors:
+    dictionaryEntries:
+    - Item1: 0
+      Item2: {x: 0, y: 1}
+    - Item1: 1
+      Item2: {x: 0, y: -1}
+    - Item1: 2
+      Item2: {x: -1, y: 0}
+    - Item1: 3
+      Item2: {x: 1, y: 0}
 --- !u!54 &4260083974250739569
 Rigidbody:
   m_ObjectHideFlags: 0
