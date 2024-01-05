@@ -13,6 +13,7 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected float attackCooldown = 0.1f;
 
     protected bool isAttacking;
+    protected bool hasHit;
     protected bool isBlocked;
     protected bool isFinishedSwinging = true;
     protected float currentAttackAngle;
@@ -134,7 +135,18 @@ public abstract class BaseWeapon : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(BottomPoint, HiltPoint - BottomPoint, out hit, HiltRange))
         {
-            TriggerHitEvent(HitEventType.Bumped, null, hit.point);
+            if (hit.collider.TryGetCachedComponent(ref hitAgents, out Agent agent))
+            {
+                if (!agentsHit.Contains(agent))
+                {
+                    agentsHit.Add(agent);
+                    hasHit = false;
+                }
+            }
+
+            if (!hasHit)
+                TriggerHitEvent(HitEventType.Bumped, agent, hit.point);
+            
             return;
         }
 
@@ -149,6 +161,7 @@ public abstract class BaseWeapon : MonoBehaviour
                     
                     TriggerHitEvent(HitEventType.Hit, agent, hit.point);
                     agentsHit.Add(agent);
+                    hasHit = true;
                 }
                 else
                 {
@@ -171,6 +184,7 @@ public abstract class BaseWeapon : MonoBehaviour
 
         isBlocked = false;
         isFinishedSwinging = true;
+        hasHit = false;
     }
 
     protected void StopSwing(HitEvent hitEvent)

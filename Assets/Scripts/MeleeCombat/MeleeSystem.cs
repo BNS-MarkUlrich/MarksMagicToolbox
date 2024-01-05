@@ -56,32 +56,21 @@ public class MeleeSystem : MonoBehaviour
         if (direction.x > 0.5f)
         {
             currentDirection = CardinalDirections.Right;
-            directionVectors.TryGetValue(currentDirection, out attackDirection);
-            print("Right");
         }
         else if (direction.x < -0.5f)
         {
             currentDirection = CardinalDirections.Left;
-            directionVectors.TryGetValue(currentDirection, out attackDirection);
-            print("Left");
         }
         else if (direction.y > 0.5f)
         {
             currentDirection = CardinalDirections.Up;
-            directionVectors.TryGetValue(currentDirection, out attackDirection);
-            print("Up");
         }
         else if (direction.y < -0.5f)
         {
             currentDirection = CardinalDirections.Down;
-            directionVectors.TryGetValue(currentDirection, out attackDirection);
-            print("Down");
         }
-        else
-        {
-            directionVectors.TryGetValue(currentDirection, out attackDirection);
-        }
-
+        
+         directionVectors.TryGetValue(currentDirection, out attackDirection);
         attackDirection.Normalize();
     }
 
@@ -94,13 +83,19 @@ public class MeleeSystem : MonoBehaviour
     {
         if (hitEvent.type == HitEventType.Missed)
         {
-            print($"{hitEvent.aggressor.name}'s attack missed"); // at {hitEvent.hitPoint}");
+            print($"{hitEvent.aggressor.name}'s {currentDirection} attack with their {hitEvent.weaponUsed.name} missed"); // at {hitEvent.hitPoint}");
+            return;
+        }
+
+        if (hitEvent.type == HitEventType.Bumped)
+        {
+            print($"{hitEvent.aggressor.name}'s {currentDirection} attack with their {hitEvent.weaponUsed.name} bumped off {hitEvent.opponent.name}");
             return;
         }
 
         if (hitEvent.type == HitEventType.Blocked)
         {
-            print($"{hitEvent.aggressor.name}'s attack was blocked by {hitEvent.opponent.name} at {hitEvent.hitPoint} with {hitEvent.weaponUsed.name}");
+            print($"{hitEvent.aggressor.name}'s {currentDirection} attack was blocked by {hitEvent.opponent.name} at {hitEvent.hitPoint} with their {hitEvent.weaponUsed.name}");
             return;
         }
 
