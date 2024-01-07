@@ -35,6 +35,7 @@ public abstract class BaseWeapon : MonoBehaviour
     public float SwingSpeed => WeaponAttributes.WeaponSpeed / WeaponAttributes.WeaponLength / WeaponAttributes.WeaponWeight;
     public bool IsAttacking => isAttacking;
     public bool IsBlocked => isBlocked;
+    public float BlockingAngle => blockingAngle;
     public Rigidbody MyRigidbody => myRigidbody;
 
     public Agent OwningAgent { get; set; }
@@ -220,13 +221,13 @@ public abstract class BaseWeapon : MonoBehaviour
         Gizmos.DrawWireSphere(BottomPoint, 0.1f);
         Gizmos.DrawRay(BottomPoint, transform.up * HiltRange);
         
-        if (OwningAgent != null)
-        {
-            Vector2 attackAngleVector = Quaternion.Euler(0f, 0f, blockingAngle) * OwningAgent.MeleeSystem.AttackDirection;
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawRay(OwningAgent.transform.position, attackAngleVector);
-            attackAngleVector = Quaternion.Euler(0f, 0f, -blockingAngle) * OwningAgent.MeleeSystem.AttackDirection;
-            Gizmos.DrawRay(OwningAgent.transform.position, attackAngleVector);
-        }
+        // if (OwningAgent != null)
+        // {
+        //     Vector2 attackAngleVector = Quaternion.Euler(0f, 0f, blockingAngle) * OwningAgent.MeleeSystem.AttackDirection;
+        //     Gizmos.color = Color.magenta;
+        //     Gizmos.DrawRay(OwningAgent.transform.position, attackAngleVector);
+        //     attackAngleVector = Quaternion.Euler(0f, 0f, -blockingAngle) * OwningAgent.MeleeSystem.AttackDirection;
+        //     Gizmos.DrawRay(OwningAgent.transform.position, attackAngleVector);
+        // }
     }
 }

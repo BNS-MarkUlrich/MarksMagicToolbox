@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3448176855484191374}
   - component: {fileID: 1478458844279128263}
   - component: {fileID: 2952327363328224811}
-  - component: {fileID: 8628786689897214222}
   - component: {fileID: 2006320299107696009}
+  - component: {fileID: 8628786689897214222}
   - component: {fileID: 4260083974250739569}
   m_Layer: 6
   m_Name: Player
@@ -124,6 +124,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb43cb232075ff84bac5f5277cf39dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2006320299107696009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7825662520104750350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9612a8c9739587a4bb7e22cfbfe94792, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myWeapon: {fileID: 462971108480609607}
+  directionVectors:
+    dictionaryEntries:
+    - Item1: 0
+      Item2: {x: 0, y: 1}
+    - Item1: 1
+      Item2: {x: 0, y: -1}
+    - Item1: 2
+      Item2: {x: -1, y: 0}
+    - Item1: 3
+      Item2: {x: 1, y: 0}
+  blockingAngles:
+    dictionaryEntries:
+    - Item1: 0
+      Item2: {x: 0, y: 0}
+    - Item1: 1
+      Item2: {x: 0, y: 0}
+    - Item1: 2
+      Item2: {x: 0, y: 0}
+    - Item1: 3
+      Item2: {x: 0, y: 0}
+  blockingLayers:
+    serializedVersion: 2
+    m_Bits: 192
+  blockingRadius: 1.8
+  blockingAngleLeft: -150
+  blockingAngleRight: 150
+  testAlwaysBlock: 0
 --- !u!114 &8628786689897214222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,29 +205,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isDead: 0
---- !u!114 &2006320299107696009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7825662520104750350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9612a8c9739587a4bb7e22cfbfe94792, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myWeapon: {fileID: 0}
-  directionVectors:
-    dictionaryEntries:
-    - Item1: 0
-      Item2: {x: 0, y: 1}
-    - Item1: 1
-      Item2: {x: 0, y: -1}
-    - Item1: 2
-      Item2: {x: -1, y: 0}
-    - Item1: 3
-      Item2: {x: 1, y: 0}
 --- !u!54 &4260083974250739569
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -264,6 +281,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
+--- !u!114 &462971108480609607 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6737703979475950233, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
+  m_PrefabInstance: {fileID: 6624214335309166558}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3371e16cc3c1e7489b9d58197241f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7241676935900997735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4580852523281391545, guid: e6a04afbcd3f88d469e091f4d2ada5ac, type: 3}
