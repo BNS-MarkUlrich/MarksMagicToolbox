@@ -68,7 +68,7 @@ public abstract class BaseWeapon : MonoBehaviour
             ResetSwing();
     }
 
-    protected void TriggerHitEvent(HitEventType type, Agent opponent, Vector3 hitPoint)
+    public void TriggerHitEvent(HitEventType type, Agent opponent, Vector3 hitPoint)
     {
         HitEvent hitEvent = new()
         {
@@ -128,7 +128,7 @@ public abstract class BaseWeapon : MonoBehaviour
             currentAttackAngle += angleStep;
             canCancelAttack = currentAttackAngle < finishAttackAngle / 2;
 
-            transform.Rotate(-Vector3.left * angleStep);
+            transform.Rotate(Vector3.left * angleStep);
             
             CheckSwingCollisions();
             return;

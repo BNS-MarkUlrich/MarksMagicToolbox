@@ -30,8 +30,8 @@ public class MeleeSystem : MonoBehaviour
 
     private void Update() 
     {
-        if (myWeapon.IsBlocking)
-            DetectAgents();
+        // if (myWeapon.IsBlocking)
+        //     DetectAgents();
 
         if (testAlwaysBlock)
         {
@@ -106,6 +106,12 @@ public class MeleeSystem : MonoBehaviour
             return;
         }
 
+        if (CheckBlockingAngle(hitEvent.opponent))
+        {
+            myWeapon.TriggerHitEvent(HitEventType.Blocked, hitEvent.opponent, hitEvent.hitPoint);
+            return;
+        }
+
         hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);
         hitEvent.opponent.MyRigidbody.AddForce
         (
@@ -141,18 +147,20 @@ public class MeleeSystem : MonoBehaviour
 
     private bool CheckBlockingAngle(Agent otherAgent)
     {
+        print($"{OwningAgent.name} is checking if {otherAgent.name} is blocking their attack");
         if (otherAgent == OwningAgent)
             return false;
 
         Vector3 directionToOtherAgent = otherAgent.transform.position - transform.position;
         float angleToOtherAgent = Vector3.Angle(transform.forward, directionToOtherAgent);
 
-        if (currentDirection == CardinalDirections.Left) 
+        // make angle negative if other agent is to the left of the player
+        if (Vector3.Cross(transform.forward, directionToOtherAgent).y < 0)
             angleToOtherAgent *= -1;
 
         if (angleToOtherAgent > blockingAngles[currentDirection].x && angleToOtherAgent < blockingAngles[currentDirection].y)
         {
-            print($"{OwningAgent.name}'s is blocking {otherAgent.name}'s attack from {angleToOtherAgent} degrees ({blockingAngles[currentDirection].x} to {blockingAngles[currentDirection].y}))");
+            // print($"{OwningAgent.name}'s is blocking {otherAgent.name}'s attack from {angleToOtherAgent} degrees ({blockingAngles[currentDirection].x} to {blockingAngles[currentDirection].y}))");
             Debug.DrawLine(transform.position, otherAgent.transform.position, Color.red);
             return true;
         }
