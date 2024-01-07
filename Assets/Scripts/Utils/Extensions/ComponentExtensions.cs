@@ -27,4 +27,21 @@ public static class ComponentExtensions
         Debug.LogWarning($"Collider {targetComponent} does not have component {typeof(Component)}");
         return false;
     }
+
+    public static J GetCachedComponent<T, J>(
+        this T targetComponent,
+        ref Dictionary<T, J> cachedSet
+    ) where T : Component where J : Component
+    {
+        if (cachedSet.ContainsKey(targetComponent))
+            return cachedSet[targetComponent];
+
+        if (targetComponent.TryGetComponent(out J component))
+        {
+            cachedSet.Add(targetComponent, component);
+            return component;
+        }
+
+        return null;
+    }
 }

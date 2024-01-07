@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2577233447626826331, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.202
+      value: 3.4
       objectReference: {fileID: 0}
     - target: {fileID: 2577233447626826331, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2577233447626826331, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.864
+      value: -1.28
       objectReference: {fileID: 0}
     - target: {fileID: 2577233447626826331, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -656,6 +656,38 @@ PrefabInstance:
     - target: {fileID: 1700457477236582175, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[0].Item2.x
+      value: -45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[0].Item2.y
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[1].Item2.x
+      value: -45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[1].Item2.y
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[2].Item2.x
+      value: -115
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[2].Item2.y
+      value: -45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[3].Item2.x
+      value: 115
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006320299107696009, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
+      propertyPath: blockingAngles.dictionaryEntries.Array.data[3].Item2.y
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 2577233447626826331, guid: ccc042a0e4d4c7e4486f804b8505273c, type: 3}
       propertyPath: m_LocalPosition.x

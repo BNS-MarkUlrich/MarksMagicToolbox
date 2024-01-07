@@ -1,22 +1,21 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MeleeSystem : MonoBehaviour
 {
     [SerializeField] private BaseWeapon myWeapon;
     [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> directionVectors;
     [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> blockingAngles;
-    [SerializeField] private LayerMask blockingLayers;
-    [SerializeField] private float blockingRadius = 1f;
-    [SerializeField] private float blockingAngleLeft = -45f;
-    [SerializeField] private float blockingAngleRight = 45f;
+    [SerializeField] private LayerMask detectionLayerMask;
+    [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private bool testAlwaysBlock;
 
     private Vector2 stanceDirection;
     private Vector2 mouseDirection;
-    private CardinalDirections currentDirection = CardinalDirections.Right;
-
+    [SerializeField] private CardinalDirections currentDirection = CardinalDirections.Right;
+    private Collider[] detectedAgents;
+    private Dictionary<Collider, Agent> cachedAgents = new();
 
     public Agent OwningAgent { get; set; }
     public Vector2 AttackDirection => stanceDirection;
@@ -31,14 +30,16 @@ public class MeleeSystem : MonoBehaviour
 
     private void Update() 
     {
+        if (myWeapon.IsBlocking)
+            DetectAgents();
+
         if (testAlwaysBlock)
         {
-            currentDirection = CardinalDirections.Right;
             SnapDirection(directionVectors[currentDirection]);
             myWeapon.SetBlockDirection(blockingAngles[currentDirection]);
             myWeapon.Block();
             myWeapon.CancelAttack();
-            DetectObjectsBetweenRays();
+
             return;
         }
 
@@ -49,7 +50,6 @@ public class MeleeSystem : MonoBehaviour
             
             myWeapon.Block();
             myWeapon.CancelAttack();
-            DetectObjectsBetweenRays();
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -116,36 +116,49 @@ public class MeleeSystem : MonoBehaviour
         print($"{hitEvent.opponent.name} took {hitEvent.weaponUsed.Damage} {hitEvent.weaponUsed.TypeOfDamage} damage from {hitEvent.aggressor.name}'s {hitEvent.weaponUsed.name}");
     }
 
-    private void DetectObjectsBetweenRays()
+    private void DetectAgents()
     {
-        Vector3 forwardDirection = transform.forward;
-
-        Vector3 leftDirection = Quaternion.Euler(0, blockingAngleLeft / 2f, 0) * forwardDirection;
-        Vector3 rightDirection = Quaternion.Euler(0, blockingAngleRight / 2f, 0) * forwardDirection;
-
-        // Calculate the endpoints of the left and right rays
-        Vector3 leftEndpoint = transform.position + leftDirection * blockingRadius;
-        Vector3 rightEndpoint = transform.position + rightDirection * blockingRadius;
-
-        // Calculate the direction vector from leftEndpoint to rightEndpoint
-        Vector3 thirdDirection = (rightEndpoint - leftEndpoint).normalized;
-
-        RaycastHit hit;
-
-        // Perform raycasts to detect objects
-        if (Physics.Raycast(transform.position, leftDirection, out hit, blockingRadius, blockingLayers) ||
-            Physics.Raycast(transform.position, rightDirection, out hit, blockingRadius, blockingLayers) ||
-            Physics.Raycast(leftEndpoint, thirdDirection, out hit, Vector3.Distance(leftEndpoint, rightEndpoint), blockingLayers))
+        Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius,  detectionLayerMask);
+        detectedAgents = colliders;
+            
+        foreach (Collider detectedAgent in detectedAgents)
         {
-            print($"Hit {hit.collider.name}");
+            if (detectedAgent == null)
+                continue;
+
+            if (detectedAgent.gameObject == gameObject)
+                continue;
+            
+            if(detectedAgent.TryGetCachedComponent(ref cachedAgents, out Agent agent))
+            {
+                if (agent == OwningAgent)
+                    continue;
+
+                CheckBlockingAngle(agent);
+            }
         }
-        else
+    }
+
+    private bool CheckBlockingAngle(Agent otherAgent)
+    {
+        if (otherAgent == OwningAgent)
+            return false;
+
+        Vector3 directionToOtherAgent = otherAgent.transform.position - transform.position;
+        float angleToOtherAgent = Vector3.Angle(transform.forward, directionToOtherAgent);
+
+        if (currentDirection == CardinalDirections.Left) 
+            angleToOtherAgent *= -1;
+
+        if (angleToOtherAgent > blockingAngles[currentDirection].x && angleToOtherAgent < blockingAngles[currentDirection].y)
         {
-            // No objects detected between the rays
-            Debug.DrawLine(transform.position, transform.position + leftDirection * blockingRadius, Color.green);
-            Debug.DrawLine(transform.position, transform.position + rightDirection * blockingRadius, Color.green);
-            Debug.DrawLine(transform.position, transform.position + thirdDirection, Color.green);
+            print($"{OwningAgent.name}'s is blocking {otherAgent.name}'s attack from {angleToOtherAgent} degrees ({blockingAngles[currentDirection].x} to {blockingAngles[currentDirection].y}))");
+            Debug.DrawLine(transform.position, otherAgent.transform.position, Color.red);
+            return true;
         }
+
+
+        return false;
     }
 
     private void OnDrawGizmos() 
@@ -156,24 +169,14 @@ public class MeleeSystem : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, mouseDirection);
 
-        // Gizmos.color = Color.green;
-        // Gizmos.DrawWireSphere(transform.position, blockingRadius);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-        Vector3 forwardDirection = transform.forward;
-
-            Vector3 leftDirection =  Quaternion.Euler(0, blockingAngleLeft / 2f, 0) * forwardDirection;
-            Vector3 rightDirection = Quaternion.Euler(0, blockingAngleRight / 2f, 0) * forwardDirection;
-
-            // Calculate the endpoints of the left and right rays
-            Vector3 leftEndpoint = transform.position + leftDirection * blockingRadius;
-            Vector3 rightEndpoint = transform.position + rightDirection * blockingRadius;
-
-            // Calculate the direction vector from leftEndpoint to rightEndpoint
-            Vector3 thirdDirection = (rightEndpoint - leftEndpoint).normalized;
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(transform.position, leftDirection * blockingRadius);
-            Gizmos.DrawRay(transform.position, rightDirection * blockingRadius);
-            Gizmos.DrawRay(leftEndpoint, thirdDirection * Vector3.Distance(leftEndpoint, rightEndpoint));
+        foreach (Vector2 blockingAngle in blockingAngles.Values)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(transform.position, Quaternion.Euler(0, blockingAngle.x, 0) * transform.forward * detectionRadius);
+            Gizmos.DrawRay(transform.position, Quaternion.Euler(0, blockingAngle.y, 0) * transform.forward * detectionRadius);
+        }
     }
 }

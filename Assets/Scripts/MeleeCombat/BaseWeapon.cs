@@ -13,6 +13,7 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected float attackCooldown = 0.1f;
 
     protected bool isAttacking;
+    protected bool isBlocking;
     protected bool canCancelAttack;
     protected bool hasHit;
     protected bool isBlocked;
@@ -34,6 +35,7 @@ public abstract class BaseWeapon : MonoBehaviour
     public float HiltRange => WeaponLength / (weaponAttributes.HiltPoint + 2);
     public float SwingSpeed => WeaponAttributes.WeaponSpeed / WeaponAttributes.WeaponLength / WeaponAttributes.WeaponWeight;
     public bool IsAttacking => isAttacking;
+    public bool IsBlocking => isBlocking;
     public bool IsBlocked => isBlocked;
     public float BlockingAngle => blockingAngle;
     public Rigidbody MyRigidbody => myRigidbody;
@@ -87,6 +89,7 @@ public abstract class BaseWeapon : MonoBehaviour
             return;
 
         isAttacking = true;
+        isBlocking = false;
         agentsHit.Clear();
 
         // TODO: Add animation here
@@ -97,6 +100,8 @@ public abstract class BaseWeapon : MonoBehaviour
     {
         if (isAttacking) 
             return;
+
+        isBlocking = true;
     }
 
     public void SetAttackDirection(Vector2 direction)
