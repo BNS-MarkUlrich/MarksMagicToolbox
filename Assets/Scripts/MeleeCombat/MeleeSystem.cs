@@ -1,25 +1,26 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class MeleeSystem : MonoBehaviour
 {
     [SerializeField] private BaseWeapon myWeapon;
     [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> directionVectors;
-    [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> blockingAngles;
+    [SerializeField] private SerializableDictionary<CardinalDirections, Vector2> blockingAngles; // TODO: Change it so X is a direction and Y is the range of min/max angle
     [SerializeField] private LayerMask detectionLayerMask;
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private bool testAlwaysBlock;
 
-    private Vector2 stanceDirection;
+    private Vector2 attackdirection;
     private Vector2 mouseDirection;
     [SerializeField] private CardinalDirections currentDirection = CardinalDirections.Right;
     private Collider[] detectedAgents;
     private Dictionary<Collider, Agent> cachedAgents = new();
 
     public Agent OwningAgent { get; set; }
-    public Vector2 AttackDirection => stanceDirection;
+    public Vector2 AttackDirection => attackdirection;
     public CardinalDirections CurrentDirection => currentDirection;
+    public bool StanceIsLeftOrRight => currentDirection == CardinalDirections.Left || currentDirection == CardinalDirections.Right;
+    public bool StanceIsUpOrDown => currentDirection == CardinalDirections.Up || currentDirection == CardinalDirections.Down;
 
     private void Start() 
     {
@@ -30,15 +31,13 @@ public class MeleeSystem : MonoBehaviour
 
     private void Update() 
     {
-        // if (myWeapon.IsBlocking)
-        //     DetectAgents();
-
         if (testAlwaysBlock)
         {
             SnapDirection(directionVectors[currentDirection]);
             myWeapon.SetBlockDirection(blockingAngles[currentDirection]);
             myWeapon.Block();
             myWeapon.CancelAttack();
+            DetectAgents();
 
             return;
         }
@@ -67,7 +66,7 @@ public class MeleeSystem : MonoBehaviour
         // snap attack directon to 4 cardinal directions
         SnapDirection(mouseDirection);
 
-        myWeapon.SetAttackDirection(stanceDirection);        
+        myWeapon.SetAttackDirection(attackdirection);        
         myWeapon.SetBlockDirection(blockingAngles[currentDirection]);
     }
 
@@ -82,8 +81,9 @@ public class MeleeSystem : MonoBehaviour
         else if (direction.y < -0.5f)
             currentDirection = CardinalDirections.Down;
         
-        directionVectors.TryGetValue(currentDirection, out stanceDirection);
-        stanceDirection.Normalize();
+        directionVectors.TryGetValue(currentDirection, out attackdirection);
+        attackdirection = transform.InverseTransformDirection(attackdirection);
+        attackdirection.Normalize();
     }
 
     private void OnHit(HitEvent hitEvent)
@@ -102,11 +102,11 @@ public class MeleeSystem : MonoBehaviour
 
         if (hitEvent.type == HitEventType.Blocked)
         {
-            print($"{hitEvent.aggressor.name}'s {currentDirection} attack was blocked by {hitEvent.opponent.name} at {hitEvent.hitPoint} with their {hitEvent.weaponUsed.name}");
+            print($"{hitEvent.aggressor.name}'s {hitEvent.stanceDirection} attack was blocked by {hitEvent.opponent.name}'s {hitEvent.opponent.MeleeSystem.CurrentDirection} block");
             return;
         }
 
-        if (CheckBlockingAngle(hitEvent.opponent))
+        if (hitEvent.opponent.MeleeSystem.HasBlockedOpponent(OwningAgent))
         {
             myWeapon.TriggerHitEvent(HitEventType.Blocked, hitEvent.opponent, hitEvent.hitPoint);
             return;
@@ -115,7 +115,7 @@ public class MeleeSystem : MonoBehaviour
         hitEvent.opponent.HealthData.TakeDamage(hitEvent.weaponUsed.Damage);
         hitEvent.opponent.MyRigidbody.AddForce
         (
-            -hitEvent.attackDirection, 
+            -hitEvent.attackDirection,
             ForceMode.Impulse
         );
 
@@ -140,51 +140,64 @@ public class MeleeSystem : MonoBehaviour
                 if (agent == OwningAgent)
                     continue;
 
-                CheckBlockingAngle(agent);
+                IsAgentInBlockingAngle(agent);
             }
         }
     }
 
-    private bool CheckBlockingAngle(Agent otherAgent)
+    private bool HasBlockedOpponent(Agent opponent)
     {
-        print($"{OwningAgent.name} is checking if {otherAgent.name} is blocking their attack");
+        if (opponent == null || opponent == OwningAgent || !IsAgentInBlockingAngle(opponent))
+            return false;
+
+        bool areMatchingHorizontalStances = StanceIsLeftOrRight && opponent.MeleeSystem.StanceIsLeftOrRight;
+        bool leftRightBlock = areMatchingHorizontalStances && opponent.MeleeSystem.CurrentDirection != CurrentDirection;
+        bool upDownBlock = StanceIsUpOrDown && opponent.MeleeSystem.CurrentDirection == CurrentDirection;
+
+        return leftRightBlock || upDownBlock;
+    }
+
+    private bool IsAgentInBlockingAngle(Agent otherAgent)
+    {
         if (otherAgent == OwningAgent)
             return false;
 
-        Vector3 directionToOtherAgent = otherAgent.transform.position - transform.position;
+        float angleToOtherAgent = GetAngleToTarget(otherAgent);
+        
+        if (angleToOtherAgent > blockingAngles[currentDirection].x && angleToOtherAgent < blockingAngles[currentDirection].y)
+        {
+            Debug.DrawLine(transform.position, otherAgent.transform.position, Color.red);
+            return true;
+        }
+
+        return false;
+    }
+
+    private float GetAngleToTarget(Agent target)
+    {
+        Vector3 directionToOtherAgent = target.transform.position - transform.position;
         float angleToOtherAgent = Vector3.Angle(transform.forward, directionToOtherAgent);
 
         // make angle negative if other agent is to the left of the player
         if (Vector3.Cross(transform.forward, directionToOtherAgent).y < 0)
             angleToOtherAgent *= -1;
 
-        if (angleToOtherAgent > blockingAngles[currentDirection].x && angleToOtherAgent < blockingAngles[currentDirection].y)
-        {
-            // print($"{OwningAgent.name}'s is blocking {otherAgent.name}'s attack from {angleToOtherAgent} degrees ({blockingAngles[currentDirection].x} to {blockingAngles[currentDirection].y}))");
-            Debug.DrawLine(transform.position, otherAgent.transform.position, Color.red);
-            return true;
-        }
-
-
-        return false;
+        return angleToOtherAgent;
     }
 
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, stanceDirection);
+        Gizmos.DrawRay(transform.position, attackdirection);
 
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, mouseDirection);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        // Gizmos.color = Color.green;
+        // Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-        foreach (Vector2 blockingAngle in blockingAngles.Values)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(transform.position, Quaternion.Euler(0, blockingAngle.x, 0) * transform.forward * detectionRadius);
-            Gizmos.DrawRay(transform.position, Quaternion.Euler(0, blockingAngle.y, 0) * transform.forward * detectionRadius);
-        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(transform.position, Quaternion.Euler(0, blockingAngles[currentDirection].x, 0) * transform.forward * detectionRadius);
+        Gizmos.DrawRay(transform.position, Quaternion.Euler(0, blockingAngles[currentDirection].y, 0) * transform.forward * detectionRadius);  
     }
 }

@@ -8,5 +8,6 @@ public class HitEvent : EventArgs
     public Agent opponent;
     public BaseWeapon weaponUsed;
     public Vector3 hitPoint;
+    public CardinalDirections stanceDirection;
     public Vector2 attackDirection;
 }

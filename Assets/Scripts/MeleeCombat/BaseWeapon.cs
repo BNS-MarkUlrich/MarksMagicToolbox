@@ -28,9 +28,12 @@ public abstract class BaseWeapon : MonoBehaviour
     public string TypeOfDamage => DamageType.Cut.ToString(); // TODO: Add damage type selection
     public float Damage => WeaponAttributes.DamageTypes[DamageType.Cut]; // TODO: Add damage type selection
     public float WeaponLength => WeaponAttributes.WeaponLength;
-    public Vector3 TopPoint => BottomPoint + transform.up * WeaponLength;
-    public Vector3 HiltPoint => transform.position + transform.up * HiltRange;
-    public Vector3 BottomPoint => transform.position + transform.up - transform.up;
+    public Vector3 TopPoint => BottomPoint + transform.up * WeaponLength; // TODO: Add to Array in WeaponAttributes
+
+    // TODO: Add CenterPoint and add to Array in WeaponAttributes
+
+    public Vector3 HiltPoint => transform.position + transform.up * HiltRange; // TODO: Add to Array in WeaponAttributes
+    public Vector3 BottomPoint => transform.position + transform.up - transform.up; // TODO: Add to Array in WeaponAttributes
     public float StrikeRange => WeaponLength - HiltRange;
     public float HiltRange => WeaponLength / (weaponAttributes.HiltPoint + 2);
     public float SwingSpeed => WeaponAttributes.WeaponSpeed / WeaponAttributes.WeaponLength / WeaponAttributes.WeaponWeight;
@@ -77,8 +80,9 @@ public abstract class BaseWeapon : MonoBehaviour
             opponent = opponent,
             weaponUsed = this,
             hitPoint = hitPoint,
+            stanceDirection = OwningAgent.MeleeSystem.CurrentDirection,
             attackDirection = OwningAgent.MeleeSystem.AttackDirection
-        };
+        }; 
 
         OnHit?.Invoke(hitEvent);
     }
@@ -110,6 +114,13 @@ public abstract class BaseWeapon : MonoBehaviour
             return;
 
         Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, direction);
+
+        if (Quaternion.Angle(transform.rotation, targetRotation) < 15f)
+        {
+            transform.rotation = targetRotation;
+            return;
+        }
+
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * SwingSpeed);
     }
 
@@ -128,7 +139,7 @@ public abstract class BaseWeapon : MonoBehaviour
             currentAttackAngle += angleStep;
             canCancelAttack = currentAttackAngle < finishAttackAngle / 2;
 
-            transform.Rotate(Vector3.left * angleStep);
+            transform.Rotate(-Vector3.left * angleStep);
             
             CheckSwingCollisions();
             return;
@@ -225,14 +236,5 @@ public abstract class BaseWeapon : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(BottomPoint, 0.1f);
         Gizmos.DrawRay(BottomPoint, transform.up * HiltRange);
-        
-        // if (OwningAgent != null)
-        // {
-        //     Vector2 attackAngleVector = Quaternion.Euler(0f, 0f, blockingAngle) * OwningAgent.MeleeSystem.AttackDirection;
-        //     Gizmos.color = Color.magenta;
-        //     Gizmos.DrawRay(OwningAgent.transform.position, attackAngleVector);
-        //     attackAngleVector = Quaternion.Euler(0f, 0f, -blockingAngle) * OwningAgent.MeleeSystem.AttackDirection;
-        //     Gizmos.DrawRay(OwningAgent.transform.position, attackAngleVector);
-        // }
     }
 }

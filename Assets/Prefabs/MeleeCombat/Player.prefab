@@ -150,19 +150,19 @@ MonoBehaviour:
   blockingAngles:
     dictionaryEntries:
     - Item1: 0
-      Item2: {x: -45, y: 45}
+      Item2: {x: -60, y: 60}
     - Item1: 1
-      Item2: {x: -45, y: 45}
+      Item2: {x: -60, y: 60}
     - Item1: 2
-      Item2: {x: -115, y: -45}
+      Item2: {x: -140, y: 20}
     - Item1: 3
-      Item2: {x: 45, y: 115}
+      Item2: {x: -20, y: 140}
   detectionLayerMask:
     serializedVersion: 2
     m_Bits: 64
   detectionRadius: 2
   testAlwaysBlock: 0
-  currentDirection: 3
+  currentDirection: 2
 --- !u!114 &8628786689897214222
 MonoBehaviour:
   m_ObjectHideFlags: 0
