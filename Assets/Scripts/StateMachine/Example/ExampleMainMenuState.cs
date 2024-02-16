@@ -1,4 +1,4 @@
-namespace GameStateMachine
+namespace StateMachine
 {
     public class ExampleMainMenuState : State
     {
