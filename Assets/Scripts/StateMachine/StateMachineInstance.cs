@@ -1,3 +1,4 @@
+using MarkUlrich.Utils;
 using UnityEngine;
 
 namespace StateMachine
@@ -15,7 +16,7 @@ namespace StateMachine
         }
 
         private void Start() => StateMachineTestStart();
-        
+
         private void Update() => StateMachineTestUpdate();
 
         public void Subscribe(State state) => StateMachine.Subscribe(state);
@@ -47,7 +48,7 @@ namespace StateMachine
 
 
         #region Testing
-        private void StateMachineTestStart() 
+        private void StateMachineTestStart()
             => StateMachine.GetState<ExampleGameState>().OnStateEnter += DebugStateInstance;
 
         private void StateMachineTestUpdate()
