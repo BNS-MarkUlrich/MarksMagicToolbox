@@ -8,15 +8,15 @@ namespace MarkUlrich.Utils
         public static T Instance
         {
             get
-            {            
+            {
                 if (_instance != null)
                     return _instance;
 
-                _instance = FindObjectOfType<T>();
+                _instance = FindAnyObjectByType<T>();
 
                 if (_instance != null)
                     return _instance;
-                
+
                 GameObject container = new(typeof(T).Name);
                 _instance = container.AddComponent<T>();
 
