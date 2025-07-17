@@ -19,7 +19,7 @@ namespace MarkUlrich.GenericStateMachine
 
         private StateMachine StateMachine { get; set; } = new();
 
-        public int StateMachineHashCode => StateMachine.GetHashCode();
+        public int HashCode => StateMachine.GetHashCode();
 
         #region Sample
         private void Awake()

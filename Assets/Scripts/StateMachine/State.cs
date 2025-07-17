@@ -28,6 +28,51 @@ namespace MarkUlrich.GenericStateMachine
         protected void SetNextState<TState>() where TState : State, new()
             => _nextState = OwningStateMachine.GetState<TState>();
 
+        /// <summary>
+        /// Executes code related to entering the state and invokes related events.
+        /// </summary>
+        // TODO: Add separate virtual method so child classes don't need to call base.EnterState().
+        public virtual void EnterState()
+        {
+            OnStateEnter?.Invoke();
+
+            OwningStateMachine.DebugLog
+            (
+                $"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.HashCode})"
+            );
+        }
+
+        /// <summary>
+        /// Executes code related to leaving the state and invokes related events.
+        /// </summary>
+        // TODO: Add separate virtual method so child classes don't need to call base.ExitState().
+        public virtual void ExitState()
+        {
+            OwningStateMachine.DebugLog
+            (
+                $"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.HashCode})"
+            );
+
+            OnStateExit?.Invoke();
+        }
+
+        /// <summary>
+        /// Triggers the Owning StateMachine Instance to move to the next state.
+        /// </summary>
+        public void MoveToNextState()
+        {
+            if (_nextState == null)
+            {
+                Debug.LogError("Next State variable was not set! Cancelling...");
+                return;
+            }
+
+            OwningStateMachine.SetState(_nextState);
+        }
+
+        /// <summary>
+        /// Loads a scene by name, optionally forcing a reload if the scene is already active.
+        /// </summary>
         protected void LoadScene(string sceneName, bool forceReload = false)
         {
             if (forceReload)
@@ -42,46 +87,6 @@ namespace MarkUlrich.GenericStateMachine
 
             SceneManager.LoadScene(sceneName);
             OwningStateMachine.DebugLog($"Loaded Scene ({sceneName})");
-        }
-
-        /// <summary>
-        /// Executes code related to entering the state.
-        /// </summary>
-        public virtual void EnterState()
-        {
-            OnStateEnter?.Invoke();
-
-            OwningStateMachine.DebugLog
-            (
-                $"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.StateMachineHashCode})"
-            );
-        }
-
-        /// <summary>
-        /// Executes code related to leaving the state.
-        /// </summary>
-        public virtual void ExitState()
-        {
-            OwningStateMachine.DebugLog
-            (
-                $"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.StateMachineHashCode})"
-            );
-
-            OnStateExit?.Invoke();
-        }
-
-        /// <summary>
-        /// Triggers the Owning StateMachine to move to the next state.
-        /// </summary>
-        public void MoveToNextState()
-        {
-            if (_nextState == null)
-            {
-                Debug.LogError("Next State variable was not set! Cancelling...");
-                return;
-            }
-
-            OwningStateMachine.SetState(_nextState);
         }
     }
 }

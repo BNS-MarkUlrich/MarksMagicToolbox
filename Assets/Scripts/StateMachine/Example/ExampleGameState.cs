@@ -10,7 +10,7 @@ namespace MarkUlrich.GenericStateMachine
         public override void EnterState()
         {
             base.EnterState();
-            SetNextState<ExampleBootState>();
+            SetNextState<ExampleMainMenuState>();
 
             LoadScene(LOAD_SCENE_NAME);
         }
