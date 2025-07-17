@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace MarkUlrich.GenericStateMachine
 {
@@ -83,5 +84,16 @@ namespace MarkUlrich.GenericStateMachine
         /// Indicates whether the state machine is in debug mode.
         /// </summary>
         public bool DebugMode { get; set; } = true;
+
+        /// <summary>
+        /// Prints a debug message to the console if DebugMode is enabled.
+        /// </summary>
+        public void DebugLog(string message)
+        {
+            if (!DebugMode)
+                return;
+
+            Debug.Log(message);
+        }
     }
 }

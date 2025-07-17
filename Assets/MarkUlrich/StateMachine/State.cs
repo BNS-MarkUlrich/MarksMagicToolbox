@@ -13,8 +13,8 @@ namespace MarkUlrich.GenericStateMachine
 
         private State _nextState;
 
-        protected StateMachineInstance OwningStateMachine { get; private set; }
-            = StateMachineInstance.Instance;
+        protected StateMachine OwningStateMachine { get; private set; }
+            = StateMachineInstance.Instance.StateMachine;
 
         public Action OnStateEnter;
         public Action OnStateExit;
@@ -38,7 +38,7 @@ namespace MarkUlrich.GenericStateMachine
 
             OwningStateMachine.DebugLog
             (
-                $"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.HashCode})"
+                $"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})"
             );
         }
 
@@ -50,7 +50,7 @@ namespace MarkUlrich.GenericStateMachine
         {
             OwningStateMachine.DebugLog
             (
-                $"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.HashCode})"
+                $"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})"
             );
 
             OnStateExit?.Invoke();
