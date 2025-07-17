@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace StateMachine
+namespace MarkUlrich.GenericStateMachine
 {
     /// <summary>
     /// Represents a base class for game states in the game state machine.
@@ -13,33 +13,35 @@ namespace StateMachine
 
         private State _nextState;
 
-        protected StateMachineInstance OwningStateMachine { get; private set; } 
+        protected StateMachineInstance OwningStateMachine { get; private set; }
             = StateMachineInstance.Instance;
 
         public Action OnStateEnter;
         public Action OnStateExit;
 
+        public bool DebugMode => OwningStateMachine.DebugMode;
+
         protected State() => InitState();
 
         protected void InitState() => OwningStateMachine.Subscribe(this);
-        
-        protected void SetNextState<TState>() where TState: State, new() 
+
+        protected void SetNextState<TState>() where TState : State, new()
             => _nextState = OwningStateMachine.GetState<TState>();
 
-        protected void LoadScene(string sceneName, bool forceRelead = false)
+        protected void LoadScene(string sceneName, bool forceReload = false)
         {
-            if (forceRelead)
+            if (forceReload)
             {
                 SceneManager.LoadScene(sceneName);
-                Debug.Log($"Loaded Scene ({sceneName})");
+                OwningStateMachine.DebugLog($"Loaded Scene ({sceneName})");
                 return;
             }
 
             if (SceneManager.GetActiveScene() == SceneManager.GetSceneByName(sceneName))
                 return;
-            
+
             SceneManager.LoadScene(sceneName);
-            Debug.Log($"Loaded Scene ({sceneName})");
+            OwningStateMachine.DebugLog($"Loaded Scene ({sceneName})");
         }
 
         /// <summary>
@@ -49,7 +51,10 @@ namespace StateMachine
         {
             OnStateEnter?.Invoke();
 
-            Debug.Log($"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.StateMachineHashCode})");
+            OwningStateMachine.DebugLog
+            (
+                $"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.StateMachineHashCode})"
+            );
         }
 
         /// <summary>
@@ -57,7 +62,10 @@ namespace StateMachine
         /// </summary>
         public virtual void ExitState()
         {
-            Debug.Log($"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.StateMachineHashCode})");
+            OwningStateMachine.DebugLog
+            (
+                $"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.StateMachineHashCode})"
+            );
 
             OnStateExit?.Invoke();
         }
@@ -72,7 +80,7 @@ namespace StateMachine
                 Debug.LogError("Next State variable was not set! Cancelling...");
                 return;
             }
-        
+
             OwningStateMachine.SetState(_nextState);
         }
     }

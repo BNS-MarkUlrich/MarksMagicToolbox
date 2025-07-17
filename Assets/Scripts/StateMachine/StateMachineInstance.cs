@@ -1,23 +1,57 @@
 using MarkUlrich.Utils;
 using UnityEngine;
 
-namespace StateMachine
+namespace MarkUlrich.GenericStateMachine
 {
     public class StateMachineInstance : SingletonInstance<StateMachineInstance>
     {
+        [SerializeField] private bool _debugMode = true;
+
+        public bool DebugMode
+        {
+            get => _debugMode;
+            private set
+            {
+                _debugMode = value;
+                StateMachine.DebugMode = value;
+            }
+        }
+
         private StateMachine StateMachine { get; set; } = new();
 
         public int StateMachineHashCode => StateMachine.GetHashCode();
 
+        #region Sample
         private void Awake()
         {
             // Example of how to set the initial state.
             SetState<ExampleBootState>();
         }
 
-        private void Start() => StateMachineTestStart();
+        private void Start()
+        {
+            // Example of how to subscribe to a state instance's OnStateEnter event.
+            StateMachine.GetState<ExampleGameState>().OnStateEnter += DebugStateInstance;
+        }
 
-        private void Update() => StateMachineTestUpdate();
+        private void DebugStateInstance() => print("I work!");
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                StateMachine.MoveToNextState();
+
+            if (Input.GetKeyDown(KeyCode.I))
+                DebugPrintStates();
+        }
+
+        private void DebugPrintStates()
+        {
+            print("Currently Subscribed States: ");
+            for (int i = 0; i < StateMachine.States.Count; i++)
+                print($"{i} : {StateMachine.States[i]} : {StateMachine.States[i].GetHashCode()}");
+        }
+        #endregion
 
         public void Subscribe(State state) => StateMachine.Subscribe(state);
 
@@ -46,30 +80,12 @@ namespace StateMachine
         /// </summary>
         public void MoveToNextState() => StateMachine.MoveToNextState();
 
-
-        #region Testing
-        private void StateMachineTestStart()
-            => StateMachine.GetState<ExampleGameState>().OnStateEnter += DebugStateInstance;
-
-        private void StateMachineTestUpdate()
+        public void DebugLog(string message)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-                DebugNextState();
+            if (!DebugMode)
+                return;
 
-            if (Input.GetKeyDown(KeyCode.I))
-                DebugPrintStates();
+            Debug.Log(message);
         }
-
-        private void DebugNextState() => StateMachine.MoveToNextState();
-
-        private void DebugPrintStates()
-        {
-            print("Currently Subscribed States: ");
-            for (int i = 0; i < StateMachine.States.Count; i++)
-                print($"{i} : {StateMachine.States[i]} : {StateMachine.States[i].GetHashCode()}");
-        }
-
-        private void DebugStateInstance() => print("I work!");
-        #endregion
     }
 }

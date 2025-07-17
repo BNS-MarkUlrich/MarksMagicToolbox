@@ -1,8 +1,8 @@
-namespace StateMachine
+namespace MarkUlrich.GenericStateMachine
 {
     public class ExampleGameState : State
     {
-        private const string LOAD_SCENE_NAME = "StatemachineTest";
+        private const string LOAD_SCENE_NAME = "Statemachine";
 
         /// <summary>
         /// Executes code related to entering the Game state.

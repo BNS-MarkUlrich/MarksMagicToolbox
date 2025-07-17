@@ -1,4 +1,4 @@
-namespace StateMachine
+namespace MarkUlrich.GenericStateMachine
 {
     public class ExampleBootState : State
     {
@@ -13,13 +13,13 @@ namespace StateMachine
             SetNextState<ExampleMainMenuState>();
 
             LoadScene(LOAD_SCENE_NAME);
-            
+
             MoveToNextState();
         }
 
         /// <summary>
         /// Executes code related to leaving the Boot state.
         /// </summary>
-        public override void ExitState() =>  base.ExitState();
+        public override void ExitState() => base.ExitState();
     }
 }

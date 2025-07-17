@@ -1,4 +1,4 @@
-namespace StateMachine
+namespace MarkUlrich.GenericStateMachine
 {
     public class ExampleMainMenuState : State
     {
