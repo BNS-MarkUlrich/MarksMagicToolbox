@@ -1,4 +1,4 @@
-namespace MarkUlrich.GenericStateMachine.Sample
+namespace MarkUlrich.GenericStateMachine.Sample.States
 {
     public class ExampleGameState : State
     {
