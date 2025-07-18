@@ -34,8 +34,12 @@ namespace MarkUlrich.GenericStateMachine.Sample
         private void DebugPrintStates()
         {
             print("Currently Subscribed States: ");
-            for (int i = 0; i < StateMachine.States.Count; i++)
-                print($"{i} : {StateMachine.States[i]} : {StateMachine.States[i].GetHashCode()}");
+            int index = 0;
+            foreach (var state in StateMachine.States)
+            {
+                print($"{index} : {state.Name} : {state.GetHashCode()}");
+                index++;
+            }
         }
     }
 }

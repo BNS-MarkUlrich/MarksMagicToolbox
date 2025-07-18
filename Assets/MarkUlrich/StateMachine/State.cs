@@ -9,17 +9,15 @@ namespace MarkUlrich.GenericStateMachine
     /// </summary>
     public abstract class State
     {
-        private string Name => GetType().Name;
+        public string Name => GetType().Name;
 
         private State _nextState;
-
-        protected StateMachine OwningStateMachine { get; private set; }
-            = StateMachineInstance.Instance.StateMachine;
 
         public Action OnStateEnter;
         public Action OnStateExit;
 
-        public bool DebugMode => OwningStateMachine.DebugMode;
+        protected StateMachine OwningStateMachine { get; private set; }
+            = StateMachineInstance.Instance.StateMachine;
 
         protected State() => InitState();
 
@@ -32,38 +30,45 @@ namespace MarkUlrich.GenericStateMachine
         /// Executes code related to entering the state and invokes related events.
         /// </summary>
         // TODO: Add separate virtual method so child classes don't need to call base.EnterState().
+        // [ ] rename this state so name can be used in the child class.
+        // [ ] make this method private so child classes can't call it.
         public virtual void EnterState()
         {
             OnStateEnter?.Invoke();
 
             OwningStateMachine.DebugLog
             (
-                $"Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})"
+                $"<color=cyan>Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})</color>"
             );
         }
 
         /// <summary>
         /// Executes code related to leaving the state and invokes related events.
         /// </summary>
-        // TODO: Add separate virtual method so child classes don't need to call base.ExitState().
+        // TODO: Add separate abstract method so child classes don't need to call base.ExitState().
+        // [ ] rename this state so name can be used in the child class.
+        // [ ] make this method private so child classes can't call it.
         public virtual void ExitState()
         {
             OwningStateMachine.DebugLog
             (
-                $"Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})"
+                $"<color=orange>Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})</color>"
             );
 
             OnStateExit?.Invoke();
         }
 
         /// <summary>
-        /// Triggers the Owning StateMachine Instance to move to the next state.
+        /// Triggers the Owning StateMachine to move to the next state.
         /// </summary>
         public void MoveToNextState()
         {
             if (_nextState == null)
             {
-                Debug.LogError("Next State variable was not set! Cancelling...");
+                Debug.LogError
+                (
+                    "Next State variable was not set! Use 'SetNextState<TState>()' to set it. Cancelling..."
+                );
                 return;
             }
 

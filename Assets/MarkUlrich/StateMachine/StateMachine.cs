@@ -10,12 +10,12 @@ namespace MarkUlrich.GenericStateMachine
     public class StateMachine
     {
         /// <summary>
-        /// The list of states in the game state machine.
+        /// A collection of all states subscribed to this state machine.
         /// </summary>
-        public List<State> States { get; } = new List<State>();
+        public HashSet<State> States { get; } = new HashSet<State>();
 
         /// <summary>
-        /// Gets the current state of the game.
+        /// The current, active state of the state machine.
         /// </summary>
         public State CurrentState { get; private set; }
 
@@ -30,7 +30,7 @@ namespace MarkUlrich.GenericStateMachine
         }
 
         /// <summary>
-        /// Sets the current state to the state parsed in the Parameter.
+        /// Sets the current state to the state parsed in the parameter.
         /// </summary>
         /// <param name="newState">The object reference state to change to.</param>
         internal void SetState(State newState)
@@ -42,23 +42,23 @@ namespace MarkUlrich.GenericStateMachine
         }
 
         /// <summary>
-        /// Sets the current state to the state parsed in the Type param.
+        /// Sets the current state to the state parsed in the Type parameter.
         /// </summary>
         /// <typeparam name="TState">The type reference of the state to change to.</typeparam>
         internal void SetState<TState>() where TState : State, new()
             => SetState(GetState<TState>());
 
         /// <summary>
-        /// Moves the current state to the next state set in the state.
+        /// Moves the current state to the next state set in the state if one is set.
         /// </summary>
         internal void MoveToNextState() => CurrentState.MoveToNextState();
 
         /// <summary>
-        /// Returns whether the current state equals the type param.
+        /// Returns whether the current state equals the type parameter.
         /// </summary>
         /// <typeparam name="TState">The state to check against.</typeparam>
         /// <returns>Whether the current state equals the type param.</returns>
-        public bool CurrentStateIs<TState>() where TState : State, new()
+        public bool IsCurrentState<TState>() where TState : State, new()
             => CurrentState.GetType() == new TState().GetType();
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace MarkUlrich.GenericStateMachine
         /// </summary>
         /// <typeparam name="TState">The state to check against.</typeparam>
         /// <returns>Whether the current state equals the type param.</returns>
-        public bool CurrentStateIs(State state)
+        public bool IsCurrentState(State state)
             => CurrentState.GetType() == state.GetType();
 
         /// <summary>
@@ -83,10 +83,13 @@ namespace MarkUlrich.GenericStateMachine
         /// <summary>
         /// Indicates whether the state machine is in debug mode.
         /// </summary>
+        /// <remarks>
+        /// Default = true.
+        /// </remarks>
         public bool DebugMode { get; set; } = true;
 
         /// <summary>
-        /// Prints a debug message to the console if DebugMode is enabled.
+        /// Prints a debug message to the console if DebugMode in the StateMachine is enabled.
         /// </summary>
         public void DebugLog(string message)
         {
