@@ -4,12 +4,8 @@ namespace MarkUlrich.GenericStateMachine.Sample.States
     {
         private const string LOAD_SCENE_NAME = "Statemachine";
 
-        /// <summary>
-        /// Executes code related to entering the Boot state.
-        /// </summary>
-        public override void EnterState()
+        public override void Enter()
         {
-            base.EnterState();
             SetNextState<ExampleMainMenuState>();
 
             LoadScene(LOAD_SCENE_NAME);
@@ -17,9 +13,6 @@ namespace MarkUlrich.GenericStateMachine.Sample.States
             MoveToNextState();
         }
 
-        /// <summary>
-        /// Executes code related to leaving the Boot state.
-        /// </summary>
-        public override void ExitState() => base.ExitState();
+        public override void Exit() { }
     }
 }

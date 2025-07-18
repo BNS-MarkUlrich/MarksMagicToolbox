@@ -17,10 +17,23 @@ namespace MarkUlrich.GenericStateMachine.Sample
         private void Start()
         {
             // Example of how to subscribe to a state instance's OnStateEnter event.
-            StateMachine.GetState<ExampleGameState>().OnStateEnter += DebugStateInstance;
+            // Also showcases when action is triggered in relation to entering the state.
+            StateMachine.GetState<ExampleGameState>().OnStateEnter += DebugStateEnterAction;
+
+            // Example of how to subscribe to a state instance's OnStateExit event.
+            // Also showcases when action is triggered in relation to exiting the state.
+            StateMachine.GetState<ExampleGameState>().OnStateExit += DebugStateExitAction;
         }
 
-        private void DebugStateInstance() => print("OnStateEnter action triggered for ExampleGameState.");
+        private void DebugStateEnterAction()
+        {
+            print("<color=purple>OnStateEnter</color> action triggered for <color=cyan>ExampleGameState</color>.");
+        }
+
+        private void DebugStateExitAction()
+        {
+            print("<color=purple>OnStateExit</color> action triggered for <color=cyan>ExampleGameState</color>.");
+        }
 
         private void Update()
         {

@@ -26,13 +26,14 @@ namespace MarkUlrich.GenericStateMachine
         protected void SetNextState<TState>() where TState : State, new()
             => _nextState = OwningStateMachine.GetState<TState>();
 
+        public abstract void Enter();
+
+        public abstract void Exit();
+
         /// <summary>
         /// Executes code related to entering the state and invokes related events.
         /// </summary>
-        // TODO: Add separate virtual method so child classes don't need to call base.EnterState().
-        // [ ] rename this state so name can be used in the child class.
-        // [ ] make this method private so child classes can't call it.
-        public virtual void EnterState()
+        public void EnterState()
         {
             OnStateEnter?.Invoke();
 
@@ -40,22 +41,23 @@ namespace MarkUlrich.GenericStateMachine
             (
                 $"<color=cyan>Entering - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})</color>"
             );
+
+            Enter();
         }
 
         /// <summary>
         /// Executes code related to leaving the state and invokes related events.
         /// </summary>
-        // TODO: Add separate abstract method so child classes don't need to call base.ExitState().
-        // [ ] rename this state so name can be used in the child class.
-        // [ ] make this method private so child classes can't call it.
-        public virtual void ExitState()
+        public void ExitState()
         {
+            OnStateExit?.Invoke();
+
             OwningStateMachine.DebugLog
             (
                 $"<color=orange>Leaving - {Name}({GetHashCode()}) in StateMachine({OwningStateMachine.GetHashCode()})</color>"
             );
 
-            OnStateExit?.Invoke();
+            Exit();
         }
 
         /// <summary>
