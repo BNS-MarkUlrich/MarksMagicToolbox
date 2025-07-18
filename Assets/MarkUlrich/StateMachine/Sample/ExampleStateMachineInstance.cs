@@ -6,7 +6,7 @@ namespace MarkUlrich.GenericStateMachine.Sample
     /// <summary>
     /// This class is purely to demonstrate what you can do with a StateMachineInstance.
     /// </summary>
-    public class ExampleStateMachineInstance : StateMachineInstance
+    public class ExampleStateMachineInstance : StateMachineBehaviour
     {
         private void Awake()
         {

@@ -7,6 +7,9 @@ namespace MarkUlrich.GenericStateMachine
     /// <summary>
     /// Represents a base class for game states in the game state machine.
     /// </summary>
+    // TODO: Add option to create instance of this state in the scene using the OwningStateMachine instance reference. Saving the created instance as (child?) object of the StateMachineInstance object.
+    // [ ] If possible, make it so the instance is saved as prefab so it can have additional components that are configured through the inspector.
+    // [ ] Alternatively, find a way for objects in the hierachy to be linked to states through the StateMachineInstance before runtime.
     public abstract class State
     {
         public string Name => GetType().Name;
@@ -16,8 +19,7 @@ namespace MarkUlrich.GenericStateMachine
         public Action OnStateEnter;
         public Action OnStateExit;
 
-        protected StateMachine OwningStateMachine { get; private set; }
-            = StateMachineInstance.Instance.StateMachine;
+        protected StateMachine OwningStateMachine { get; private set; } = StateMachineBehaviour.Instance.StateMachine;
 
         protected State() => InitState();
 
